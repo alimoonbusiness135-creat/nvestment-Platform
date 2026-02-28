@@ -1,0 +1,244 @@
+/* Admin Panel Styles */
+:root {
+    --admin-primary: #1a73e8;
+    --admin-secondary: #34A853;
+    --admin-background: #f5f5f5;
+    --admin-sidebar-width: 240px;
+    --admin-sidebar-collapsed: 70px;
+    --admin-header-height: 64px;
+}
+
+.admin-body {
+    background-color: var(--admin-background);
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: var(--admin-sidebar-width);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #fff;
+    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+}
+
+.admin-sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    height: var(--admin-header-height);
+}
+
+.admin-sidebar-header h3 {
+    margin: 0;
+    color: var(--admin-primary);
+    font-weight: 500;
+    font-size: 1.25rem;
+}
+
+.admin-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-menu li {
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.admin-menu li a {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    color: var(--text-medium);
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.admin-menu li a i {
+    margin-right: 12px;
+    font-size: 1.1rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+.admin-menu li a:hover {
+    background-color: rgba(26, 115, 232, 0.05);
+    color: var(--admin-primary);
+}
+
+.admin-menu li.active a {
+    background-color: rgba(26, 115, 232, 0.1);
+    color: var(--admin-primary);
+    font-weight: 500;
+    border-left: 3px solid var(--admin-primary);
+}
+
+/* Admin Content */
+.admin-content {
+    flex: 1;
+    margin-left: var(--admin-sidebar-width);
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-header {
+    margin-bottom: 24px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.admin-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 500;
+}
+
+/* Stats Card */
+.statistic-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+
+.statistic-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.statistic-card h4 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: var(--text-medium);
+}
+
+.statistic-card .value {
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: var(--admin-primary);
+    margin: 0;
+}
+
+/* Mobile Responsiveness */
+.admin-sidebar-toggle {
+    display: none;
+    position: fixed;
+    left: 16px;
+    top: 16px;
+    z-index: 110;
+    background-color: var(--admin-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .admin-sidebar {
+        width: var(--admin-sidebar-collapsed);
+        transform: translateX(-100%);
+    }
+    
+    .admin-sidebar.open {
+        transform: translateX(0);
+        width: var(--admin-sidebar-width);
+    }
+    
+    .admin-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .admin-sidebar-toggle {
+        display: block;
+    }
+    
+    .admin-menu li a span {
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+    .admin-sidebar.open .admin-menu li a span {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-content {
+        padding: 16px;
+    }
+    
+    .row {
+        margin-left: -8px;
+        margin-right: -8px;
+    }
+    
+    .col-md-3, .col-md-4, .col-md-6, .col-md-8, .col-md-9, .col-md-12 {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    
+    .table-responsive {
+        margin-bottom: 16px;
+    }
+    
+    .statistic-card {
+        padding: 12px;
+    }
+    
+    .statistic-card .value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-content {
+        padding: 12px;
+    }
+    
+    .admin-header {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .card-header {
+        padding: 12px 16px;
+    }
+    
+    .card-body {
+        padding: 16px;
+    }
+    
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.875rem;
+    }
+} 

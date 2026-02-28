@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %} - Investment Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}"> <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+    <button class="admin-sidebar-toggle" id="sidebar-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="admin-sidebar" id="admin-sidebar">
+        <div class="admin-sidebar-header">
+            <h3>Admin Panel</h3>
+            <button class="close-sidebar d-md-none ml-auto">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="admin-menu">
+            <li class="{{ 'active' if request.path == url_for('admin_dashboard') else '' }}">
+                <a href="{{ url_for('admin_dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="{{ 'active' if 'admin/users' in request.path else '' }}">
+                <a href="{{ url_for('admin_users') }}">
+                    <i class="fas fa-users"></i> <span>Users</span>
+                </a>
+            </li>
+            <li class="{{ 'active' if 'admin/deposits' in request.path else '' }}">
+                <a href="{{ url_for('admin_deposits') }}">
+                    <i class="fas fa-money-bill-wave"></i> <span>Deposits</span>
+                </a>
+            </li>
+            <li class="{{ 'active' if 'admin/withdrawals' in request.path else '' }}">
+                <a href="{{ url_for('admin_withdrawals') }}">
+                    <i class="fas fa-hand-holding-usd"></i> <span>Withdrawals</span>
+                </a>
+            </li>
+            <li class="{{ 'active' if 'admin/notifications' in request.path else '' }}">
+                <a href="{{ url_for('admin_notifications') }}">
+                    <i class="fas fa-bell"></i> <span>Notifications</span>
+                </a>
+            </li>
+            <li class="{{ 'active' if 'admin/deleted-accounts' in request.path else '' }}">
+                <a href="{{ url_for('admin_deleted_accounts') }}">
+                    <i class="fas fa-user-slash"></i> <span>Deleted Accounts</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-user-circle"></i> <span>User Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('logout') }}">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="admin-content">
+        <div class="admin-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('admin-sidebar');
+            const closeSidebar = document.querySelector('.close-sidebar');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+            });
+            
+            if (closeSidebar) {
+                closeSidebar.addEventListener('click', function() {
+                    sidebar.classList.remove('open');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 992 && 
+                    !sidebar.contains(event.target) && 
+                    !sidebarToggle.contains(event.target) &&
+                    sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

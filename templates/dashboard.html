@@ -1,0 +1,403 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Investment Platform{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1>Welcome, {{ current_user.username }}</h1>
+            <p class="text-muted">Account Overview</p>
+        </div>
+        <div>
+            <!-- Referral Bonus Button - Shows card with milestone bonuses -->
+            <button type="button" class="btn btn-lg btn-warning" id="bigBonusBtn">
+                <i class="fas fa-gift"></i> BIG BONUS
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Big Bonus Card - Hidden by default -->
+<div class="card mb-4" id="bigBonusCard" style="display: none;">
+    <div class="card-header bg-warning text-dark">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fas fa-gift"></i> Referral Milestone Bonuses</h4>
+            <button type="button" class="close" id="closeBonusCard">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="text-center mb-4">
+            <h4>Earn BIG Bonuses by Referring Users!</h4>
+            <p>Refer friends and earn huge one-time bonuses when you reach these milestones:</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">50 Direct Referrals</h5>
+                                <p class="text-muted mb-0">Your progress: {{ referral_stats.level1 }}/50 referrals</p>
+                            </div>
+                            <div class="text-right">
+                                <h4 class="text-success mb-0">$500</h4>
+                            </div>
+                        </div>
+                        
+                        <div class="progress mt-2 mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ referral_bonuses[50]['progress'] }}%" aria-valuenow="{{ referral_stats.level1 }}" aria-valuemin="0" aria-valuemax="50"></div>
+                        </div>
+                        
+                        <div class="text-center">
+                            {% if referral_bonuses[50]['claimed'] %}
+                                <button class="btn btn-secondary btn-block" disabled>
+                                    <i class="fas fa-check"></i> Bonus Claimed
+                                </button>
+                            {% elif referral_bonuses[50]['eligible'] %}
+                                <form action="{{ url_for('claim_referral_bonus') }}" method="POST">
+                                    <input type="hidden" name="milestone" value="50">
+                                    <button type="submit" class="btn btn-success btn-block">
+                                        <i class="fas fa-gift"></i> Claim $500 Bonus
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button class="btn btn-secondary btn-block" disabled>
+                                    Need {{ 50 - referral_stats.level1 }} More Referrals
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">100 Direct Referrals</h5>
+                                <p class="text-muted mb-0">Your progress: {{ referral_stats.level1 }}/100 referrals</p>
+                            </div>
+                            <div class="text-right">
+                                <h4 class="text-success mb-0">$1,000</h4>
+                            </div>
+                        </div>
+                        
+                        <div class="progress mt-2 mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ referral_bonuses[100]['progress'] }}%" aria-valuenow="{{ referral_stats.level1 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        
+                        <div class="text-center">
+                            {% if referral_bonuses[100]['claimed'] %}
+                                <button class="btn btn-secondary btn-block" disabled>
+                                    <i class="fas fa-check"></i> Bonus Claimed
+                                </button>
+                            {% elif referral_bonuses[100]['eligible'] %}
+                                <form action="{{ url_for('claim_referral_bonus') }}" method="POST">
+                                    <input type="hidden" name="milestone" value="100">
+                                    <button type="submit" class="btn btn-success btn-block">
+                                        <i class="fas fa-gift"></i> Claim $1,000 Bonus
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button class="btn btn-secondary btn-block" disabled>
+                                    Need {{ 100 - referral_stats.level1 }} More Referrals
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-3">
+            <a href="{{ url_for('referrals') }}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Invite More Friends
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <div class="stat-card-value">${{ current_user.deposit_balance|round(2) }}</div>
+        <div class="stat-card-title">Active Deposits</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-card-value">${{ current_user.earning_balance|round(2) }}</div>
+        <div class="stat-card-title">Earning Balance</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-card-value">${{ current_user.total_withdrawn|round(2) }}</div>
+        <div class="stat-card-title">Total Withdrawn</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-card-value">{{ referral_stats.total }}</div>
+        <div class="stat-card-title">Team Size</div>
+    </div>
+</div>
+
+<div class="row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <div class="col" style="flex: 2; min-width: 300px;">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Active Deposits</h3>
+                <a href="{{ url_for('deposit') }}" class="btn btn-primary btn-sm">Make New Deposit</a>
+            </div>
+            <div class="card-body">
+                {% if active_deposits %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Daily Earning (2%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for deposit in active_deposits %}
+                                <tr>
+                                    <td>${{ deposit.amount|round(2) }}</td>
+                                    <td>{{ deposit.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>${{ (deposit.amount * 0.02)|round(2) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>${{ total_active_deposits|round(2) }}</th>
+                                    <th>Total</th>
+                                    <th>${{ (total_active_deposits * 0.02)|round(2) }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <!-- Profit Collection Section -->
+                    <div class="profit-collection-section mt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h4 class="mb-1">Available Profit</h4>
+                                        <p class="text-muted mb-0">Collect your daily 2% profit</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <h3 class="text-success mb-0">${{ daily_profit|round(2) }}</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    {% if can_collect %}
+                                        <form action="{{ url_for('collect_profit') }}" method="POST">
+                                            <button type="submit" class="btn btn-success btn-block">
+                                                <i class="fas fa-hand-holding-usd mr-2"></i> Collect Profit
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <button class="btn btn-secondary btn-block" disabled>
+                                            <i class="fas fa-clock mr-2"></i> Next Collection in {{ hours_remaining|round(1) }} hours
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <p>You don't have any active deposits yet.</p>
+                        <a href="{{ url_for('deposit') }}" class="btn btn-primary btn-sm mt-2">Make Your First Deposit</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Recent Earnings</h3>
+                <a href="{{ url_for('profile') }}" class="btn btn-secondary btn-sm">View All</a>
+            </div>
+            <div class="card-body">
+                {% if recent_earnings %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for earning in recent_earnings %}
+                                <tr>
+                                    <td>${{ earning.amount|round(2) }}</td>
+                                    <td>{{ earning.description }}</td>
+                                    <td>{{ earning.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">No earnings recorded yet.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col" style="flex: 1; min-width: 300px;">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Referral Stats</h3>
+                <a href="{{ url_for('referrals') }}" class="btn btn-secondary btn-sm">View Details</a>
+            </div>
+            <div class="card-body">
+                <div class="stat-list">
+                    <div class="stat-item d-flex justify-content-between mb-2">
+                        <span>Level 1 (5%)</span>
+                        <span>{{ referral_stats.level1 }} referrals</span>
+                    </div>
+                    <div class="stat-item d-flex justify-content-between mb-2">
+                        <span>Level 2 (2%)</span>
+                        <span>{{ referral_stats.level2 }} referrals</span>
+                    </div>
+                    <div class="stat-item d-flex justify-content-between mb-2">
+                        <span>Level 3 (1%)</span>
+                        <span>{{ referral_stats.level3 }} referrals</span>
+                    </div>
+                    <div class="stat-item d-flex justify-content-between mb-2">
+                        <span>Total Team</span>
+                        <span>{{ referral_stats.total }} members</span>
+                    </div>
+                    <div class="stat-item d-flex justify-content-between mb-2">
+                        <strong>Total Commissions</strong>
+                        <strong>${{ total_referral_earnings|round(2) }}</strong>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('referrals') }}" class="btn btn-primary btn-block mt-3">Invite Friends</a>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Recent Withdrawals</h3>
+                <a href="{{ url_for('withdrawal') }}" class="btn btn-primary btn-sm">Withdraw</a>
+            </div>
+            <div class="card-body">
+                {% if withdrawals %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for withdrawal in withdrawals %}
+                                <tr>
+                                    <td>${{ withdrawal.amount|round(2) }}</td>
+                                    <td>
+                                        {% if withdrawal.status == 'pending' %}
+                                            <span class="badge badge-warning">Pending</span>
+                                        {% elif withdrawal.status == 'approved' %}
+                                            <span class="badge badge-success">Approved</span>
+                                        {% elif withdrawal.status == 'rejected' %}
+                                            <span class="badge badge-danger">Rejected</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ withdrawal.created_at.strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">No withdrawal history yet.</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-4 card-elevation-1">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Notifications</h3>
+                <a href="{{ url_for('notifications') }}" class="btn btn-secondary btn-sm">View All</a>
+            </div>
+            <div class="card-body p-0">
+                {% if notifications %}
+                    <ul class="notification-list">
+                        {% for notification in notifications %}
+                            <li class="notification-item notification-item-unread">
+                                <div class="notification-item-content">
+                                    <div class="notification-item-header">
+                                        <div class="notification-title">
+                                            {{ notification.title }}
+                                            {% if 'deposit' in notification.title|lower %}
+                                                <span class="notification-category deposit">Deposit</span>
+                                            {% elif 'withdraw' in notification.title|lower %}
+                                                <span class="notification-category withdrawal">Withdrawal</span>
+                                            {% elif 'security' in notification.title|lower or 'login' in notification.title|lower %}
+                                                <span class="notification-category security">Security</span>
+                                            {% else %}
+                                                <span class="notification-category system">System</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="notification-message">{{ notification.message }}</div>
+                                    <div class="notification-footer">
+                                        <div class="notification-time">{{ notification.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="card-footer">
+                        <a href="{{ url_for('notifications') }}" class="btn btn-secondary btn-block">View All Notifications</a>
+                    </div>
+                {% else %}
+                    <div class="notifications-empty py-4">
+                        <div class="notifications-empty-icon">
+                            <i class="fas fa-bell-slash"></i>
+                        </div>
+                        <p class="notifications-empty-text">No new notifications</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get elements
+        const bigBonusBtn = document.getElementById('bigBonusBtn');
+        const bigBonusCard = document.getElementById('bigBonusCard');
+        const closeBonusCard = document.getElementById('closeBonusCard');
+        
+        // Show bonus card when button is clicked
+        bigBonusBtn.addEventListener('click', function() {
+            bigBonusCard.style.display = 'block';
+            // Scroll to the card
+            bigBonusCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        
+        // Hide bonus card when close button is clicked
+        closeBonusCard.addEventListener('click', function() {
+            bigBonusCard.style.display = 'none';
+        });
+    });
+</script>
+{% endblock %} 

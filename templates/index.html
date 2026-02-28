@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to Investment Platform{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center mt-5 mb-5">
+    <h1 class="mb-3">Grow Your Wealth with Our Investment Platform</h1>
+    <p class="mb-4">Secure investments with daily returns and a powerful referral system</p>
+    <div class="mt-4">
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Sign In</a>
+            <a href="{{ url_for('register') }}" class="btn btn-secondary btn-lg">Create Account</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="features-section mt-5 mb-5">
+    <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        <div class="feature-card" style="flex: 1; min-width: 300px; max-width: 350px; padding: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; text-align: center; transition: transform 0.3s;">
+            <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;"></i>
+            <h3>2% Daily Returns</h3>
+            <p>Earn 2% daily on your investments, automatically added to your balance every 24 hours.</p>
+        </div>
+        
+        <div class="feature-card" style="flex: 1; min-width: 300px; max-width: 350px; padding: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; text-align: center; transition: transform 0.3s;">
+            <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;"></i>
+            <h3>Secure Investments</h3>
+            <p>Your investments are protected by our advanced security protocols and regular audits.</p>
+        </div>
+        
+        <div class="feature-card" style="flex: 1; min-width: 300px; max-width: 350px; padding: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; text-align: center; transition: transform 0.3s;">
+            <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;"></i>
+            <h3>3-Level Referrals</h3>
+            <p>Earn 5%, 2%, and 1% from your level 1, 2, and 3 referrals' investments respectively.</p>
+        </div>
+    </div>
+</div>
+
+<div class="how-it-works mt-5 mb-5">
+    <h2 class="text-center mb-4">How It Works</h2>
+    <div class="steps" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        <div class="step" style="flex: 1; min-width: 200px; max-width: 250px; text-align: center;">
+            <div class="step-number" style="width: 50px; height: 50px; border-radius: 50%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.5rem; font-weight: 600;">1</div>
+            <h4>Create an Account</h4>
+            <p>Sign up for free and set up your profile.</p>
+        </div>
+        
+        <div class="step" style="flex: 1; min-width: 200px; max-width: 250px; text-align: center;">
+            <div class="step-number" style="width: 50px; height: 50px; border-radius: 50%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.5rem; font-weight: 600;">2</div>
+            <h4>Make a Deposit</h4>
+            <p>Deposit funds between $50 and $5000.</p>
+        </div>
+        
+        <div class="step" style="flex: 1; min-width: 200px; max-width: 250px; text-align: center;">
+            <div class="step-number" style="width: 50px; height: 50px; border-radius: 50%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.5rem; font-weight: 600;">3</div>
+            <h4>Earn Daily Returns</h4>
+            <p>Watch your balance grow daily with 2% returns.</p>
+        </div>
+        
+        <div class="step" style="flex: 1; min-width: 200px; max-width: 250px; text-align: center;">
+            <div class="step-number" style="width: 50px; height: 50px; border-radius: 50%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.5rem; font-weight: 600;">4</div>
+            <h4>Withdraw Anytime</h4>
+            <p>Request withdrawals at your convenience.</p>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section bg-light p-5 mb-5" style="border-radius: 8px; text-align: center;">
+    <h2 class="mb-3">Ready to Start Investing?</h2>
+    <p class="mb-4">Join thousands of investors already growing their wealth on our platform.</p>
+    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Create Your Account Now</a>
+</div>
+{% endblock %} 

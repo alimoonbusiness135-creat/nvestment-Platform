@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Referrals - Investment Platform{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Referral Program</h1>
+    <p class="text-muted">Earn commissions from your referrals' deposits</p>
+</div>
+
+<div class="deposit-form-container">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Your Referral Link</h3>
+        </div>
+        <div class="card-body">
+            <p>Share this link with your friends and earn commissions when they deposit:</p>
+            
+            <div class="referral-link-container">
+                <div class="referral-link" id="referral-link">{{ referral_link }}</div>
+                <button class="copy-btn" id="copy-referral-link">Copy</button>
+            </div>
+            
+            <div class="alert alert-info mt-3">
+                <h4 class="alert-heading">How it works:</h4>
+                <p>Our 3-level referral program allows you to earn commissions from your direct and indirect referrals:</p>
+                <ul>
+                    <li><strong>Level 1 (Direct):</strong> Earn 5% commission on deposits from users you directly refer</li>
+                    <li><strong>Level 2:</strong> Earn 2% commission on deposits from users referred by your direct referrals</li>
+                    <li><strong>Level 3:</strong> Earn 1% commission on deposits from users referred by your level 2 referrals</li>
+                </ul>
+                <p class="mb-0">Commissions are automatically added to your earning balance when your referrals make deposits.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 24px;">
+        <div class="col" style="flex: 1; min-width: 300px;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Referral Statistics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-card-value">{{ referral_stats.level1 }}</div>
+                            <div class="stat-card-title">Level 1 Referrals</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-value">{{ referral_stats.level2 }}</div>
+                            <div class="stat-card-title">Level 2 Referrals</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-value">{{ referral_stats.level3 }}</div>
+                            <div class="stat-card-title">Level 3 Referrals</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-card-value">${{ total_referral_earnings|round(2) }}</div>
+                            <div class="stat-card-title">Total Earnings</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col" style="flex: 1; min-width: 300px;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Promotional Materials</h3>
+                </div>
+                <div class="card-body">
+                    <p>Use these promotional materials to share on your social media:</p>
+                    
+                    <div class="promo-materials" style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+                        <div class="promo-item" style="flex: 1; min-width: 150px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden;">
+                            <img src="https://via.placeholder.com/300x200?text=Promo+Banner+1" alt="Promotional Banner" style="width: 100%; height: auto;">
+                            <div style="padding: 8px;">
+                                <a href="#" class="btn btn-sm btn-secondary">Download</a>
+                            </div>
+                        </div>
+                        
+                        <div class="promo-item" style="flex: 1; min-width: 150px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden;">
+                            <img src="https://via.placeholder.com/300x200?text=Promo+Banner+2" alt="Promotional Banner" style="width: 100%; height: auto;">
+                            <div style="padding: 8px;">
+                                <a href="#" class="btn btn-sm btn-secondary">Download</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>Sample Message:</h4>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="4" readonly>Join the investment platform where you can earn 2% daily returns on your investments! Use my referral link to get started: {{ referral_link }}</textarea>
+                        <button class="btn btn-secondary btn-sm mt-2">Copy Message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3 class="mb-0">Your Direct Referrals</h3>
+        </div>
+        <div class="card-body">
+            {% if direct_referrals %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Join Date</th>
+                                <th>Deposits</th>
+                                <th>Commission Earned</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for referral in direct_referrals %}
+                            <tr>
+                                <td>{{ referral.username }}</td>
+                                <td>{{ referral.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>${{ referral.deposit_balance|round(2) }}</td>
+                                <td>${{ (referral.deposit_balance * 0.05)|round(2) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <p>You don't have any direct referrals yet. Share your referral link to start earning commissions!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3 class="mb-0">Referral Earnings History</h3>
+        </div>
+        <div class="card-body">
+            {% if referral_earnings %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Level</th>
+                                <th>User</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for earning in referral_earnings %}
+                            <tr>
+                                <td>${{ earning.commission|round(2) }}</td>
+                                <td>Level {{ earning.level }}</td>
+                                <td>
+                                    {% set referred_user = referred_users.get(earning.referred_id) %}
+                                    {% if referred_user %}
+                                        {{ referred_user.username }}
+                                    {% else %}
+                                        User #{{ earning.referred_id }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ earning.created_at.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">No referral earnings recorded yet.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

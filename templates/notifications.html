@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - Investment Platform{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Notifications</h1>
+    <p class="text-muted">Stay updated with the latest platform news and account updates</p>
+</div>
+
+<div class="deposit-form-container">
+    <div class="card card-elevation-1">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">All Notifications</h3>
+            <div class="d-flex align-items-center">
+                <button class="mark-all-read" id="markAllRead">
+                    <i class="fas fa-check-double"></i> Mark all as read
+                </button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-sm ml-2">Back to Dashboard</a>
+            </div>
+        </div>
+        <div class="notification-tabs">
+            <div class="notification-tab active" data-filter="all">
+                All <span class="notification-tab-badge">{{ notifications|length }}</span>
+            </div>
+            <div class="notification-tab" data-filter="unread">
+                Unread 
+                {% set unread_count = 0 %}
+                {% for notification in notifications %}
+                    {% if not notification.is_read %}
+                        {% set unread_count = unread_count + 1 %}
+                    {% endif %}
+                {% endfor %}
+                {% if unread_count > 0 %}
+                    <span class="notification-tab-badge">{{ unread_count }}</span>
+                {% endif %}
+            </div>
+            <div class="notification-tab" data-filter="system">System</div>
+            <div class="notification-tab" data-filter="deposit">Deposits</div>
+            <div class="notification-tab" data-filter="withdrawal">Withdrawals</div>
+            <div class="notification-tab" data-filter="account">Account</div>
+        </div>
+        <div class="card-body p-0">
+            {% if notifications %}
+                <ul class="notification-list">
+                    {% for notification in notifications %}
+                        <li class="notification-item {% if not notification.is_read %}notification-item-unread{% endif %}" 
+                            data-id="{{ notification.id }}"
+                            data-category="{{ notification.category }}">
+                            <div class="notification-item-content">
+                                <div class="notification-item-header">
+                                    <div class="notification-title">
+                                        {{ notification.title }}
+                                        <span class="notification-category {{ notification.category }}">{{ notification.category|title }}</span>
+                                    </div>
+                                </div>
+                                <div class="notification-message">{{ notification.message }}</div>
+                                <div class="notification-footer">
+                                    <div class="notification-time">{{ notification.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+                                    <div class="notification-actions">
+                                        {% if not notification.is_read %}
+                                            <button class="notification-action-btn mark-read" data-id="{{ notification.id }}">
+                                                <i class="fas fa-check"></i> Mark as read
+                                            </button>
+                                        {% endif %}
+                                        <button class="notification-action-btn delete-notification" data-id="{{ notification.id }}">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="notifications-empty">
+                    <div class="notifications-empty-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h4>No notifications yet</h4>
+                    <p class="notifications-empty-text">You don't have any notifications at the moment. We'll notify you about important updates and account activity.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card mt-4 card-elevation-1">
+        <div class="card-header">
+            <h3 class="mb-0">Notification Settings</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="form-group">
+                    <div class="md-checkbox">
+                        <input type="checkbox" id="deposit_notifications" checked disabled>
+                        <label for="deposit_notifications">
+                            Deposit Updates (Required)
+                        </label>
+                        <small class="form-text text-muted">Receive notifications about deposit approvals and rejections</small>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="md-checkbox">
+                        <input type="checkbox" id="withdrawal_notifications" checked disabled>
+                        <label for="withdrawal_notifications">
+                            Withdrawal Updates (Required)
+                        </label>
+                        <small class="form-text text-muted">Receive notifications about withdrawal status changes</small>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="md-checkbox">
+                        <input type="checkbox" id="referral_notifications" checked disabled>
+                        <label for="referral_notifications">
+                            Referral Notifications (Required)
+                        </label>
+                        <small class="form-text text-muted">Receive notifications about new referrals and commissions</small>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="md-checkbox">
+                        <input type="checkbox" id="system_notifications" checked disabled>
+                        <label for="system_notifications">
+                            System Announcements (Required)
+                        </label>
+                        <small class="form-text text-muted">Receive important system announcements from administrators</small>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <p>Notification settings customization will be available in a future update. For now, all notifications are enabled to ensure you receive important updates about your account.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching
+    const tabs = document.querySelectorAll('.notification-tab');
+    const notificationItems = document.querySelectorAll('.notification-item');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Filter notifications based on tab
+            const filter = this.dataset.filter;
+            
+            notificationItems.forEach(item => {
+                if (filter === 'all') {
+                    item.style.display = 'flex';
+                } else if (filter === 'unread') {
+                    item.style.display = item.classList.contains('notification-item-unread') ? 'flex' : 'none';
+                } else {
+                    item.style.display = item.dataset.category === filter ? 'flex' : 'none';
+                }
+            });
+        });
+    });
+    
+    // Mark all as read
+    const markAllReadBtn = document.getElementById('markAllRead');
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', async function() {
+            try {
+                const response = await fetch('/api/notifications/mark-all-read', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                if (response.ok) {
+                    const unreadItems = document.querySelectorAll('.notification-item-unread');
+                    unreadItems.forEach(item => {
+                        item.classList.remove('notification-item-unread');
+                        const actions = item.querySelector('.notification-actions');
+                        if (actions) {
+                            actions.innerHTML = `
+                                <button class="notification-action-btn delete-notification" data-id="${item.dataset.id}">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            `;
+                        }
+                    });
+                    
+                    // Update unread count
+                    const unreadTab = document.querySelector('.notification-tab[data-filter="unread"]');
+                    const badge = unreadTab.querySelector('.notification-tab-badge');
+                    if (badge) {
+                        badge.textContent = '0';
+                    }
+                }
+            } catch (error) {
+                console.error('Error marking all notifications as read:', error);
+            }
+        });
+    }
+    
+    // Mark single notification as read
+    document.addEventListener('click', async function(e) {
+        if (e.target.closest('.mark-read')) {
+            const button = e.target.closest('.mark-read');
+            const notificationId = button.dataset.id;
+            
+            try {
+                const response = await fetch(`/api/notifications/${notificationId}/mark-read`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                if (response.ok) {
+                    const notificationItem = button.closest('.notification-item');
+                    notificationItem.classList.remove('notification-item-unread');
+                    
+                    // Update actions
+                    const actions = notificationItem.querySelector('.notification-actions');
+                    if (actions) {
+                        actions.innerHTML = `
+                            <button class="notification-action-btn delete-notification" data-id="${notificationId}">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        `;
+                    }
+                    
+                    // Update unread count
+                    const unreadItems = document.querySelectorAll('.notification-item-unread');
+                    const unreadTab = document.querySelector('.notification-tab[data-filter="unread"]');
+                    const badge = unreadTab.querySelector('.notification-tab-badge');
+                    if (badge) {
+                        badge.textContent = unreadItems.length;
+                    }
+                }
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+            }
+        }
+    });
+    
+    // Delete notification
+    document.addEventListener('click', async function(e) {
+        if (e.target.closest('.delete-notification')) {
+            const button = e.target.closest('.delete-notification');
+            const notificationId = button.dataset.id;
+            
+            try {
+                const response = await fetch(`/api/notifications/${notificationId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                if (response.ok) {
+                    const notificationItem = button.closest('.notification-item');
+                    notificationItem.style.opacity = '0';
+                    setTimeout(() => {
+                        notificationItem.remove();
+                        
+                        // Update counts
+                        const allTab = document.querySelector('.notification-tab[data-filter="all"]');
+                        const allBadge = allTab.querySelector('.notification-tab-badge');
+                        if (allBadge) {
+                            allBadge.textContent = document.querySelectorAll('.notification-item').length;
+                        }
+                        
+                        const unreadTab = document.querySelector('.notification-tab[data-filter="unread"]');
+                        const unreadBadge = unreadTab.querySelector('.notification-tab-badge');
+                        if (unreadBadge) {
+                            const unreadCount = document.querySelectorAll('.notification-item-unread').length;
+                            unreadBadge.textContent = unreadCount || '';
+                        }
+                        
+                        // Show empty state if no notifications left
+                        if (document.querySelectorAll('.notification-item').length === 0) {
+                            const notificationList = document.querySelector('.notification-list');
+                            notificationList.innerHTML = `
+                                <div class="notifications-empty">
+                                    <div class="notifications-empty-icon">
+                                        <i class="fas fa-bell-slash"></i>
+                                    </div>
+                                    <h4>No notifications yet</h4>
+                                    <p class="notifications-empty-text">You don't have any notifications at the moment. We'll notify you about important updates and account activity.</p>
+                                </div>
+                            `;
+                        }
+                    }, 300);
+                }
+            } catch (error) {
+                console.error('Error deleting notification:', error);
+            }
+        }
+    });
+});
+</script>
+{% endblock %} 

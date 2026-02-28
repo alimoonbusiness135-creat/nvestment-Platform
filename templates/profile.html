@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - Investment Platform{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>My Profile</h1>
+    <p class="text-muted">Manage your account information and history</p>
+</div>
+
+<div class="row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <div class="col" style="flex: 1; min-width: 300px;">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Account Information</h3>
+            </div>
+            <div class="card-body">
+                <div class="profile-info text-center mb-4">
+                    <div class="profile-img mb-3">
+                        <img src="{{ url_for('static', filename='images/profiles/' + current_user.profile_image) }}" alt="Profile Image" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-color);">
+                    </div>
+                    <h2 class="mb-1">{{ current_user.username }}</h2>
+                    <p class="text-muted">{{ current_user.email }}</p>
+                    <p class="text-muted">Member since {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data" id="profile-form">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" readonly>
+                        <small class="form-text text-muted">Email cannot be changed for security reasons</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullname" name="fullname" value="{{ current_user.fullname or '' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone" name="phone" value="{{ current_user.phone or '' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="3">{{ current_user.address or '' }}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profile_image" class="form-label">Profile Image</label>
+                        <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                        <a href="{{ url_for('settings') }}" class="btn btn-secondary">Change Password</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col" style="flex: 1; min-width: 300px;">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav" style="display: flex; gap: 20px; list-style: none; padding: 0;">
+                    <li><a href="#" class="profile-tab active" data-target="deposits-tab">Deposits</a></li>
+                    <li><a href="#" class="profile-tab" data-target="earnings-tab">Earnings</a></li>
+                    <li><a href="#" class="profile-tab" data-target="withdrawals-tab">Withdrawals</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div id="deposits-tab" class="profile-tab-content" style="display: block;">
+                    <h3 class="mb-3">Deposit History</h3>
+                    {% if deposits %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Method</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for deposit in deposits %}
+                                    <tr>
+                                        <td>${{ deposit.amount|round(2) }}</td>
+                                        <td>{{ deposit.payment_method }}</td>
+                                        <td>
+                                            {% if deposit.status == 'pending' %}
+                                                <span class="badge badge-warning">Pending</span>
+                                            {% elif deposit.status == 'approved' %}
+                                                <span class="badge badge-success">Approved</span>
+                                            {% elif deposit.status == 'rejected' %}
+                                                <span class="badge badge-danger">Rejected</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ deposit.created_at.strftime('%Y-%m-%d') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">No deposit history yet.</div>
+                    {% endif %}
+                </div>
+                
+                <div id="earnings-tab" class="profile-tab-content" style="display: none;">
+                    <h3 class="mb-3">Earning History</h3>
+                    {% if earnings %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for earning in earnings %}
+                                    <tr>
+                                        <td>${{ earning.amount|round(2) }}</td>
+                                        <td>{{ earning.description }}</td>
+                                        <td>{{ earning.created_at.strftime('%Y-%m-%d') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">No earning history yet.</div>
+                    {% endif %}
+                </div>
+                
+                <div id="withdrawals-tab" class="profile-tab-content" style="display: none;">
+                    <h3 class="mb-3">Withdrawal History</h3>
+                    {% if withdrawals %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Method</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for withdrawal in withdrawals %}
+                                    <tr>
+                                        <td>${{ withdrawal.amount|round(2) }}</td>
+                                        <td>{{ withdrawal.payment_method }}</td>
+                                        <td>
+                                            {% if withdrawal.status == 'pending' %}
+                                                <span class="badge badge-warning">Pending</span>
+                                            {% elif withdrawal.status == 'approved' %}
+                                                <span class="badge badge-success">Approved</span>
+                                            {% elif withdrawal.status == 'rejected' %}
+                                                <span class="badge badge-danger">Rejected</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ withdrawal.created_at.strftime('%Y-%m-%d') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">No withdrawal history yet.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h3 class="mb-0">Account Statistics</h3>
+            </div>
+            <div class="card-body">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-card-value">${{ current_user.deposit_balance|round(2) }}</div>
+                        <div class="stat-card-title">Active Deposits</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-value">${{ current_user.earning_balance|round(2) }}</div>
+                        <div class="stat-card-title">Available Balance</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-value">${{ current_user.total_withdrawn|round(2) }}</div>
+                        <div class="stat-card-title">Total Withdrawn</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-value">{{ current_user.deposits|length }}</div>
+                        <div class="stat-card-title">Total Deposits</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

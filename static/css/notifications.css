@@ -1,0 +1,233 @@
+/* Modern Professional Notification System */
+.notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-item {
+    display: flex;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    background: var(--background-color);
+    position: relative;
+    font-style: italic;
+}
+
+.notification-item:hover {
+    background: var(--surface-color);
+}
+
+.notification-item-unread {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.notification-item-unread:hover {
+    background: rgba(37, 99, 235, 0.08);
+}
+
+.notification-item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.notification-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-style: italic;
+}
+
+.notification-category {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: var(--border-radius-pill);
+    font-weight: 500;
+    font-style: italic;
+}
+
+.notification-category.deposit {
+    background: rgba(8, 145, 178, 0.1);
+    color: var(--secondary-color);
+}
+
+.notification-category.withdrawal {
+    background: rgba(124, 58, 237, 0.1);
+    color: var(--accent-color);
+}
+
+.notification-category.security {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.notification-category.system {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+.notification-message {
+    color: var(--text-medium);
+    font-size: 13px;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.notification-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.notification-time {
+    color: var(--text-light);
+    font-size: 12px;
+    font-style: italic;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.notification-item:hover .notification-actions {
+    opacity: 1;
+}
+
+/* Action buttons */
+.notification-action-btn {
+    background: none;
+    border: none;
+    color: var(--text-medium);
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-style: italic;
+}
+
+.notification-action-btn:hover {
+    background: var(--hover-color);
+    color: var(--primary-color);
+}
+
+.notification-action-btn i {
+    font-size: 14px;
+}
+
+.notification-tabs {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fff;
+    padding: 0 16px;
+}
+
+.notification-tab {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #5f6368;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.notification-tab:hover {
+    color: #202124;
+}
+
+.notification-tab.active {
+    color: #1a73e8;
+    font-weight: 500;
+}
+
+.notification-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #1a73e8;
+    border-radius: 3px 3px 0 0;
+}
+
+.notification-tab-badge {
+    background: #1a73e8;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.mark-all-read {
+    background: none;
+    border: none;
+    color: #1a73e8;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.mark-all-read:hover {
+    background: #e8f0fe;
+}
+
+/* Empty state */
+.notifications-empty {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-md);
+    color: var(--text-medium);
+    font-style: italic;
+}
+
+.notifications-empty-icon {
+    font-size: 48px;
+    color: var(--text-light);
+    margin-bottom: var(--spacing-md);
+}
+
+.notifications-empty-text {
+    font-size: 15px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+/* Animation for new notifications */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification-item-new {
+    animation: slideIn 0.3s ease-out;
+} 

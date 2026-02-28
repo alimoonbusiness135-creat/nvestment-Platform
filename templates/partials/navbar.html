@@ -1,0 +1,239 @@
+{# Enhanced Navigation Bar #}
+<nav class="navbar">
+    <div class="container">
+        <a href="{{ url_for('dashboard') }}" class="navbar-brand">
+            <span class="navbar-brand-logo">
+                <i class="fas fa-chart-line"></i>
+            </span>
+            Investment Platform
+        </a>
+        
+        <div class="d-flex align-items-center">
+            <div class="d-none d-lg-flex">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.path == url_for('dashboard') %}active{% endif %}">
+                            <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('deposit') }}" class="nav-link {% if request.path == url_for('deposit') %}active{% endif %}">
+                            <i class="fas fa-wallet"></i> <span>Deposit</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('withdrawal') }}" class="nav-link {% if request.path == url_for('withdrawal') %}active{% endif %}">
+                            <i class="fas fa-money-bill-wave"></i> <span>Withdraw</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('referrals') }}" class="nav-link {% if request.path == url_for('referrals') %}active{% endif %}">
+                            <i class="fas fa-users"></i> <span>Referrals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('animation_demo') }}" class="nav-link {% if request.path == url_for('animation_demo') %}active{% endif %}">
+                            <i class="fas fa-magic"></i> <span>Animations</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Action Buttons with Enhanced User Profile -->
+            <div class="navbar-actions d-none d-lg-flex">
+                <a href="{{ url_for('notifications') }}" class="navbar-action-btn notification-badge" data-count="{{ unread_notifications_count }}">
+                    <i class="fas fa-bell"></i>
+                </a>
+                
+                <!-- Enhanced User Profile Button -->
+                <div class="navbar-dropdown user-profile-dropdown">
+                    <button class="navbar-action-btn user-profile-btn" id="user-dropdown-toggle">
+                        <div class="user-avatar">{{ current_user.username[0].upper() }}</div>
+                        <div class="user-info">
+                            <span class="user-name">{{ current_user.username }}</span>
+                            <span class="user-role">Member</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="navbar-dropdown-content user-dropdown-menu" id="user-dropdown-menu">
+                        <div class="navbar-user">
+                            <div class="navbar-user-avatar large">
+                                {{ current_user.username[0].upper() }}
+                            </div>
+                            <div class="navbar-user-info">
+                                <div class="navbar-user-name">{{ current_user.username }}</div>
+                                <div class="navbar-user-email">{{ current_user.email }}</div>
+                                <div class="user-status">
+                                    <span class="status-dot online"></span>
+                                    <span class="status-text">Online</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown-section">
+                            <a href="{{ url_for('profile') }}" class="navbar-dropdown-item">
+                                <i class="fas fa-user"></i> My Profile
+                            </a>
+                            <a href="{{ url_for('settings') }}" class="navbar-dropdown-item">
+                                <i class="fas fa-cog"></i> Account Settings
+                            </a>
+                        </div>
+                        {% if current_user.id == 1 %}
+                        <div class="navbar-dropdown-divider"></div>
+                        <div class="dropdown-section">
+                            <a href="{{ url_for('admin_dashboard') }}" class="navbar-dropdown-item">
+                                <i class="fas fa-user-shield"></i> Admin Panel
+                            </a>
+                        </div>
+                        {% endif %}
+                        <div class="navbar-dropdown-divider"></div>
+                        <div class="dropdown-section">
+                            <a href="{{ url_for('logout') }}" class="navbar-dropdown-item text-danger">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggle" id="navbar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- Enhanced Mobile Navigation Menu -->
+        <ul class="navbar-nav mobile-nav" id="navbar-nav">
+            <li class="nav-close-item">
+                <button class="nav-close-btn" id="nav-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </li>
+            
+            <div class="navbar-user mobile-user">
+                <div class="navbar-user-avatar large">
+                    {{ current_user.username[0].upper() }}
+                </div>
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name">{{ current_user.username }}</div>
+                    <div class="navbar-user-email">{{ current_user.email }}</div>
+                    <div class="user-status">
+                        <span class="status-dot online"></span>
+                        <span class="status-text">Online</span>
+                    </div>
+                </div>
+            </div>
+            
+            <li class="nav-item">
+                <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.path == url_for('dashboard') %}active{% endif %}">
+                    <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('deposit') }}" class="nav-link {% if request.path == url_for('deposit') %}active{% endif %}">
+                    <i class="fas fa-wallet"></i> <span>Deposit</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('withdrawal') }}" class="nav-link {% if request.path == url_for('withdrawal') %}active{% endif %}">
+                    <i class="fas fa-money-bill-wave"></i> <span>Withdraw</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('referrals') }}" class="nav-link {% if request.path == url_for('referrals') %}active{% endif %}">
+                    <i class="fas fa-users"></i> <span>Referrals</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('animation_demo') }}" class="nav-link {% if request.path == url_for('animation_demo') %}active{% endif %}">
+                    <i class="fas fa-magic"></i> <span>Animations</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('notifications') }}" class="nav-link {% if request.path == url_for('notifications') %}active{% endif %}">
+                    <i class="fas fa-bell"></i> <span>Notifications</span>
+                    {% if unread_notifications_count > 0 %}
+                    <span class="badge badge-danger ml-auto">{{ unread_notifications_count }}</span>
+                    {% endif %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('profile') }}" class="nav-link {% if request.path == url_for('profile') %}active{% endif %}">
+                    <i class="fas fa-user-circle"></i> <span>Profile</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('settings') }}" class="nav-link {% if request.path == url_for('settings') %}active{% endif %}">
+                    <i class="fas fa-cog"></i> <span>Account Settings</span>
+                </a>
+            </li>
+            {% if current_user.id == 1 %}
+            <li class="nav-item">
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if '/admin' in request.path %}active{% endif %}">
+                    <i class="fas fa-user-shield"></i> <span>Admin Panel</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a href="{{ url_for('logout') }}" class="nav-link text-danger">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+        
+        <!-- Mobile Menu Overlay -->
+        <div class="navbar-overlay" id="navbar-overlay"></div>
+    </div>
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile navigation menu
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarNav = document.getElementById('navbar-nav');
+        const navCloseBtn = document.getElementById('nav-close-btn');
+        const overlay = document.getElementById('navbar-overlay');
+        
+        if (navbarToggle && navbarNav) {
+            navbarToggle.addEventListener('click', function() {
+                navbarNav.classList.add('show');
+                overlay.classList.add('show');
+                document.body.classList.add('nav-open');
+            });
+            
+            if (navCloseBtn) {
+                navCloseBtn.addEventListener('click', function() {
+                    navbarNav.classList.remove('show');
+                    overlay.classList.remove('show');
+                    document.body.classList.remove('nav-open');
+                });
+            }
+            
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    navbarNav.classList.remove('show');
+                    overlay.classList.remove('show');
+                    document.body.classList.remove('nav-open');
+                });
+            }
+        }
+        
+        // Enhanced User dropdown menu
+        const userDropdownToggle = document.getElementById('user-dropdown-toggle');
+        const userDropdownMenu = document.getElementById('user-dropdown-menu');
+        
+        if (userDropdownToggle && userDropdownMenu) {
+            userDropdownToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdownMenu.classList.toggle('show');
+                userDropdownToggle.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!userDropdownMenu.contains(e.target) && !userDropdownToggle.contains(e.target)) {
+                    userDropdownMenu.classList.remove('show');
+                    userDropdownToggle.classList.remove('active');
+                }
+            });
+        }
+    });
+</script> 

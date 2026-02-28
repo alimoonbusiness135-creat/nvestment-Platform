@@ -1,0 +1,456 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Admin - Notifications{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Manage Notifications</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card mb-4 card-elevation-2">
+            <div class="card-header">
+                <h3 class="mb-0">Send New Notification</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin_notifications') }}">
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input type="text" class="form-control" id="title" name="title" required placeholder="Notification title">
+                        <div class="form-char-count"><span id="titleCount">0</span>/50</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea class="form-control" id="message" name="message" rows="4" required placeholder="Notification message"></textarea>
+                        <div class="form-char-count"><span id="messageCount">0</span>/200</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notification Type:</label>
+                        <div class="md-radio">
+                            <input class="form-check-input" type="radio" name="notification_type" id="global" value="global" checked>
+                            <label for="global">
+                                All Users (Global Notification)
+                            </label>
+                        </div>
+                        <div class="md-radio mt-2">
+                            <input class="form-check-input" type="radio" name="notification_type" id="specific" value="specific">
+                            <label for="specific">
+                                Specific User
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="userSelectGroup" style="display: none;">
+                        <label for="user_id">Select User:</label>
+                        <select class="form-control" id="user_id" name="user_id">
+                            <option value="">-- Select User --</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.username }} ({{ user.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notification Category:</label>
+                        <div class="d-flex flex-wrap">
+                            <div class="chip notification-category-chip active" data-category="system">
+                                <span class="chip-icon"><i class="fas fa-cog"></i></span>
+                                System
+                            </div>
+                            <div class="chip notification-category-chip" data-category="deposit">
+                                <span class="chip-icon"><i class="fas fa-money-bill-wave"></i></span>
+                                Deposit
+                            </div>
+                            <div class="chip notification-category-chip" data-category="withdrawal">
+                                <span class="chip-icon"><i class="fas fa-hand-holding-usd"></i></span>
+                                Withdrawal
+                            </div>
+                            <div class="chip notification-category-chip" data-category="security">
+                                <span class="chip-icon"><i class="fas fa-shield-alt"></i></span>
+                                Security
+                            </div>
+                        </div>
+                        <input type="hidden" name="category" id="categoryInput" value="system">
+                    </div>
+                    
+                    <div class="form-group form-check">
+                        <div class="md-checkbox">
+                            <input type="checkbox" class="form-check-input" id="is_global" name="is_global" checked>
+                            <label for="is_global">Mark as Global Notification</label>
+                            <small class="form-text text-muted">This will be visible to all users if checked.</small>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane mr-2"></i> Send Notification
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card card-elevation-1">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Notification Tips</h3>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li class="mb-2">Use <strong>global notifications</strong> for platform announcements, updates, and important news.</li>
+                    <li class="mb-2"><strong>Individual notifications</strong> are useful for account-specific information.</li>
+                    <li class="mb-2">Keep titles <strong>concise</strong> (under 50 characters) for better readability.</li>
+                    <li class="mb-2">Write <strong>clear and straightforward</strong> messages.</li>
+                    <li class="mb-2">Use appropriate <strong>categories</strong> to help users filter notifications.</li>
+                    <li class="mb-2">Consider <strong>timing</strong> - avoid sending too many notifications at once.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card mt-4 card-elevation-1">
+            <div class="card-header">
+                <h3 class="mb-0">Quick Templates</h3>
+            </div>
+            <div class="card-body">
+                <div class="notification-template" data-title="System Maintenance Scheduled" data-message="We will be performing system maintenance on [DATE]. The platform will be unavailable for approximately 2 hours during this time." data-category="system">
+                    <h5><i class="fas fa-tools text-primary mr-2"></i> Maintenance Notice</h5>
+                    <button class="btn btn-sm btn-outline-primary mt-2">Use Template</button>
+                </div>
+                <hr>
+                <div class="notification-template" data-title="New Feature Released" data-message="We're excited to announce we've added [FEATURE] to the platform. Try it out today!" data-category="system">
+                    <h5><i class="fas fa-star text-warning mr-2"></i> Feature Announcement</h5>
+                    <button class="btn btn-sm btn-outline-primary mt-2">Use Template</button>
+                </div>
+                <hr>
+                <div class="notification-template" data-title="Security Alert: Password Changed" data-message="Your account password was recently changed. If you did not make this change, please contact support immediately." data-category="security">
+                    <h5><i class="fas fa-shield-alt text-danger mr-2"></i> Security Alert</h5>
+                    <button class="btn btn-sm btn-outline-primary mt-2">Use Template</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4 card-elevation-2">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">All Notifications</h3>
+        <div class="d-flex align-items-center">
+            <div class="notification-tabs notification-tabs-sm mr-3">
+                <div class="notification-tab active">All</div>
+                <div class="notification-tab">System</div>
+                <div class="notification-tab">Deposits</div>
+                <div class="notification-tab">Withdrawals</div>
+                <div class="notification-tab">Security</div>
+            </div>
+            <input type="text" id="notificationSearch" class="form-control" placeholder="Search notifications...">
+        </div>
+    </div>
+    <div class="card-body p-0">
+        {% if notifications %}
+            <div class="table-responsive">
+                <table class="table table-striped" id="notificationsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Message</th>
+                            <th>User</th>
+                            <th>Global</th>
+                            <th>Read</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for notification in notifications %}
+                        <tr class="notification-row" data-category="{% if 'deposit' in notification.title|lower %}deposit{% elif 'withdraw' in notification.title|lower %}withdrawal{% elif 'security' in notification.title|lower or 'login' in notification.title|lower %}security{% else %}system{% endif %}">
+                            <td>{{ notification.id }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {{ notification.title }}
+                                    {% if 'deposit' in notification.title|lower %}
+                                    <span class="notification-category deposit ml-2">Deposit</span>
+                                    {% elif 'withdraw' in notification.title|lower %}
+                                    <span class="notification-category withdrawal ml-2">Withdrawal</span>
+                                    {% elif 'security' in notification.title|lower or 'login' in notification.title|lower %}
+                                    <span class="notification-category security ml-2">Security</span>
+                                    {% else %}
+                                    <span class="notification-category system ml-2">System</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>{{ notification.message }}</td>
+                            <td>
+                                {% for user in users %}
+                                    {% if user.id == notification.user_id %}
+                                        {{ user.username }}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if notification.is_global %}
+                                    <span class="badge badge-info">All Users</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if notification.is_global %}
+                                    <span class="badge badge-success">Yes</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">No</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if notification.is_read %}
+                                    <span class="badge badge-success">Yes</span>
+                                {% else %}
+                                    <span class="badge badge-warning">No</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ notification.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-primary view-notification-btn" data-id="{{ notification.id }}" data-title="{{ notification.title }}" data-message="{{ notification.message }}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger delete-notification-btn" data-id="{{ notification.id }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="notifications-empty">
+                <div class="notifications-empty-icon">
+                    <i class="fas fa-bell-slash"></i>
+                </div>
+                <h4>No notifications found</h4>
+                <p class="notifications-empty-text">There are no notifications in the system yet. Use the form above to create your first notification.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- View Notification Modal -->
+<div class="modal fade" id="viewNotificationModal" tabindex="-1" role="dialog" aria-labelledby="viewNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewNotificationModalLabel">View Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="notification-item">
+                    <div class="notification-item-content">
+                        <div class="notification-title" id="modalNotificationTitle"></div>
+                        <div class="notification-message" id="modalNotificationMessage"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteNotificationModal" tabindex="-1" role="dialog" aria-labelledby="deleteNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteNotificationModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this notification? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle user selector based on notification type
+        const notificationTypeRadios = document.querySelectorAll('input[name="notification_type"]');
+        const userSelectGroup = document.getElementById('userSelectGroup');
+        const isGlobalCheckbox = document.getElementById('is_global');
+        
+        notificationTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'specific') {
+                    userSelectGroup.style.display = 'block';
+                    isGlobalCheckbox.checked = false;
+                } else {
+                    userSelectGroup.style.display = 'none';
+                    isGlobalCheckbox.checked = true;
+                }
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('notificationSearch');
+        const notificationsTable = document.getElementById('notificationsTable');
+        
+        if (searchInput && notificationsTable) {
+            const tableRows = notificationsTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                for (let i = 0; i < tableRows.length; i++) {
+                    const rowData = tableRows[i].textContent.toLowerCase();
+                    if (rowData.includes(searchTerm)) {
+                        tableRows[i].style.display = '';
+                    } else {
+                        tableRows[i].style.display = 'none';
+                    }
+                }
+            });
+        }
+        
+        // Character count for title and message
+        const titleInput = document.getElementById('title');
+        const messageInput = document.getElementById('message');
+        const titleCount = document.getElementById('titleCount');
+        const messageCount = document.getElementById('messageCount');
+        
+        if (titleInput && titleCount) {
+            titleInput.addEventListener('input', function() {
+                titleCount.textContent = this.value.length;
+                if (this.value.length > 50) {
+                    titleCount.classList.add('text-danger');
+                } else {
+                    titleCount.classList.remove('text-danger');
+                }
+            });
+        }
+        
+        if (messageInput && messageCount) {
+            messageInput.addEventListener('input', function() {
+                messageCount.textContent = this.value.length;
+                if (this.value.length > 200) {
+                    messageCount.classList.add('text-danger');
+                } else {
+                    messageCount.classList.remove('text-danger');
+                }
+            });
+        }
+        
+        // Category selection
+        const categoryChips = document.querySelectorAll('.notification-category-chip');
+        const categoryInput = document.getElementById('categoryInput');
+        
+        categoryChips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                categoryChips.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                categoryInput.value = this.dataset.category;
+            });
+        });
+        
+        // Template selection
+        const templates = document.querySelectorAll('.notification-template button');
+        templates.forEach(template => {
+            template.addEventListener('click', function() {
+                const parent = this.parentElement;
+                const title = parent.dataset.title;
+                const message = parent.dataset.message;
+                const category = parent.dataset.category;
+                
+                titleInput.value = title;
+                messageInput.value = message;
+                titleCount.textContent = title.length;
+                messageCount.textContent = message.length;
+                
+                // Set the category
+                categoryChips.forEach(chip => {
+                    if (chip.dataset.category === category) {
+                        chip.click();
+                    }
+                });
+            });
+        });
+        
+        // View notification modal
+        const viewBtns = document.querySelectorAll('.view-notification-btn');
+        const modalTitle = document.getElementById('modalNotificationTitle');
+        const modalMessage = document.getElementById('modalNotificationMessage');
+        
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const title = this.dataset.title;
+                const message = this.dataset.message;
+                
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                
+                $('#viewNotificationModal').modal('show');
+            });
+        });
+        
+        // Delete notification
+        const deleteBtns = document.querySelectorAll('.delete-notification-btn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        let notificationToDelete = null;
+        
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                notificationToDelete = this.dataset.id;
+                $('#deleteNotificationModal').modal('show');
+            });
+        });
+        
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', function() {
+                // Here you would add the actual delete functionality with AJAX
+                console.log('Deleting notification ID:', notificationToDelete);
+                
+                // For now, just hide the row and close the modal
+                const row = document.querySelector(`.delete-notification-btn[data-id="${notificationToDelete}"]`).closest('tr');
+                row.style.display = 'none';
+                
+                $('#deleteNotificationModal').modal('hide');
+            });
+        }
+        
+        // Notification tabs
+        const tabs = document.querySelectorAll('.notification-tabs-sm .notification-tab');
+        const rows = document.querySelectorAll('.notification-row');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.textContent.trim().toLowerCase();
+                
+                if (category === 'all') {
+                    rows.forEach(row => {
+                        row.style.display = '';
+                    });
+                } else {
+                    rows.forEach(row => {
+                        if (row.dataset.category === category) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %} 

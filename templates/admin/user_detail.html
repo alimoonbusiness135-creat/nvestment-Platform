@@ -1,0 +1,419 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Admin - User Details{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>User Details</h1>
+        <a href="{{ url_for('admin_users') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Users
+        </a>
+    </div>
+</div>
+
+<!-- User Profile Summary -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="mb-0">User Profile</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="profile-info">
+                    <h4>{{ user.username }}</h4>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Full Name:</strong> {{ user.fullname or 'Not provided' }}</p>
+                    <p><strong>Phone:</strong> {{ user.phone or 'Not provided' }}</p>
+                    <p><strong>Address:</strong> {{ user.address or 'Not provided' }}</p>
+                    <p><strong>Joined:</strong> {{ user.created_at.strftime('%B %d, %Y') }}</p>
+                    <p><strong>Referral Code:</strong> {{ user.referral_code }}</p>
+                    <p><strong>2FA Enabled:</strong> {{ 'Yes' if user.two_factor_enabled else 'No' }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="financial-summary">
+                    <div class="stat-card">
+                        <div class="stat-card-value">${{ user.deposit_balance|round(2) }}</div>
+                        <div class="stat-card-title">Deposit Balance</div>
+                    </div>
+                    <div class="stat-card mt-3">
+                        <div class="stat-card-value">${{ user.earning_balance|round(2) }}</div>
+                        <div class="stat-card-title">Earning Balance</div>
+                    </div>
+                    <div class="stat-card mt-3">
+                        <div class="stat-card-value">${{ user.total_withdrawn|round(2) }}</div>
+                        <div class="stat-card-title">Total Withdrawn</div>
+                    </div>
+                    <div class="stat-card mt-3">
+                        <div class="stat-card-value">{{ user.children|length }}</div>
+                        <div class="stat-card-title">Referrals</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="d-flex">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addBonusModal">
+                <i class="fas fa-plus-circle"></i> Add Bonus
+            </button>
+            <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#addPenaltyModal">
+                <i class="fas fa-minus-circle"></i> Add Penalty
+            </button>
+            <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#sendNotificationModal">
+                <i class="fas fa-bell"></i> Send Notification
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="userDetailsTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="deposits-tab" data-toggle="tab" href="#deposits" role="tab">
+            Deposits
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="withdrawals-tab" data-toggle="tab" href="#withdrawals" role="tab">
+            Withdrawals
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="earnings-tab" data-toggle="tab" href="#earnings" role="tab">
+            Earnings
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="referrals-tab" data-toggle="tab" href="#referrals" role="tab">
+            Referrals
+        </a>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="userDetailsTabContent">
+    <!-- Deposits Tab -->
+    <div class="tab-pane fade show active" id="deposits" role="tabpanel">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Deposits</h3>
+            </div>
+            <div class="card-body">
+                {% if deposits %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Payment Method</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for deposit in deposits %}
+                            <tr>
+                                <td>{{ deposit.id }}</td>
+                                <td>${{ deposit.amount|round(2) }}</td>
+                                <td>
+                                    {% if deposit.status == 'pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% elif deposit.status == 'approved' %}
+                                    <span class="badge badge-success">Approved</span>
+                                    {% elif deposit.status == 'rejected' %}
+                                    <span class="badge badge-danger">Rejected</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ deposit.payment_method or 'N/A' }}</td>
+                                <td>{{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    {% if deposit.status == 'pending' %}
+                                    <form method="POST" action="{{ url_for('admin_approve_deposit', deposit_id=deposit.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Are you sure you want to approve this deposit?')">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('admin_reject_deposit', deposit_id=deposit.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to reject this deposit?')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <span class="text-muted">Processed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">No deposits found for this user.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Withdrawals Tab -->
+    <div class="tab-pane fade" id="withdrawals" role="tabpanel">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Withdrawals</h3>
+            </div>
+            <div class="card-body">
+                {% if withdrawals %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Payment Method</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for withdrawal in withdrawals %}
+                            <tr>
+                                <td>{{ withdrawal.id }}</td>
+                                <td>${{ withdrawal.amount|round(2) }}</td>
+                                <td>
+                                    {% if withdrawal.status == 'pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% elif withdrawal.status == 'approved' %}
+                                    <span class="badge badge-success">Approved</span>
+                                    {% elif withdrawal.status == 'rejected' %}
+                                    <span class="badge badge-danger">Rejected</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ withdrawal.payment_method or 'N/A' }}</td>
+                                <td>{{ withdrawal.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    {% if withdrawal.status == 'pending' %}
+                                    <form method="POST" action="{{ url_for('admin_approve_withdrawal', withdrawal_id=withdrawal.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Are you sure you want to approve this withdrawal?')">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('admin_reject_withdrawal', withdrawal_id=withdrawal.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to reject this withdrawal?')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <span class="text-muted">Processed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">No withdrawals found for this user.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Earnings Tab -->
+    <div class="tab-pane fade" id="earnings" role="tabpanel">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Earnings</h3>
+            </div>
+            <div class="card-body">
+                {% if earnings %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for earning in earnings %}
+                            <tr>
+                                <td>{{ earning.id }}</td>
+                                <td>${{ earning.amount|round(2) }}</td>
+                                <td>{{ earning.description or 'N/A' }}</td>
+                                <td>{{ earning.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">No earnings found for this user.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Referrals Tab -->
+    <div class="tab-pane fade" id="referrals" role="tabpanel">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Referrals</h3>
+            </div>
+            <div class="card-body">
+                {% if user.children %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Joined</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for referral in user.children %}
+                            <tr>
+                                <td>{{ referral.id }}</td>
+                                <td>{{ referral.username }}</td>
+                                <td>{{ referral.email }}</td>
+                                <td>{{ referral.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_user_detail', user_id=referral.id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">No referrals found for this user.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Bonus Modal -->
+<div class="modal fade" id="addBonusModal" tabindex="-1" role="dialog" aria-labelledby="addBonusModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBonusModalLabel">Add Bonus for {{ user.username }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_add_bonus') }}">
+                <div class="modal-body">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <div class="form-group">
+                        <label for="bonusAmount">Amount ($):</label>
+                        <input type="number" class="form-control" id="bonusAmount" name="amount" min="1" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bonusReason">Reason:</label>
+                        <textarea class="form-control" id="bonusReason" name="reason" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add Bonus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Penalty Modal -->
+<div class="modal fade" id="addPenaltyModal" tabindex="-1" role="dialog" aria-labelledby="addPenaltyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPenaltyModalLabel">Add Penalty for {{ user.username }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_add_penalty') }}">
+                <div class="modal-body">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <div class="form-group">
+                        <label for="penaltyAmount">Amount ($):</label>
+                        <input type="number" class="form-control" id="penaltyAmount" name="amount" min="1" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="penaltyReason">Reason:</label>
+                        <textarea class="form-control" id="penaltyReason" name="reason" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Add Penalty</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Send Notification Modal -->
+<div class="modal fade" id="sendNotificationModal" tabindex="-1" role="dialog" aria-labelledby="sendNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendNotificationModalLabel">Send Notification to {{ user.username }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_notifications') }}">
+                <div class="modal-body">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <div class="form-group">
+                        <label for="notificationTitle">Title:</label>
+                        <input type="text" class="form-control" id="notificationTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="notificationMessage">Message:</label>
+                        <textarea class="form-control" id="notificationMessage" name="message" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Notification</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-info {
+        padding: 1rem;
+    }
+    .profile-info h4 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+    .financial-summary {
+        padding: 1rem;
+    }
+    .nav-tabs .nav-link {
+        color: var(--text-medium);
+    }
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+</style>
+{% endblock %} 

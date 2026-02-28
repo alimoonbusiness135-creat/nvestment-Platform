@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Deposit - Investment Platform{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Make a Deposit</h1>
+    <p class="text-muted">Minimum $50, Maximum $5000</p>
+</div>
+
+<div class="deposit-form-container">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Deposit Form</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('deposit') }}" id="deposit-form">
+                <div class="form-group">
+                    <label for="amount" class="form-label">Amount (USD)</label>
+                    <input type="number" class="form-control" id="amount" name="amount" min="50" max="5000" step="10" required>
+                    <div id="amount-feedback" class="form-text text-danger"></div>
+                    <small class="form-text text-muted">Enter an amount between $50 and $5000</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Select Payment Method</label>
+                    <div class="payment-methods">
+                        <div class="payment-method" data-method="binance">
+                            <img src="{{ url_for('static', filename='images/binance.webp') }}" alt="Binance" style="height: 40px; width: auto;">
+                            <p class="mb-0 mt-2">Binance</p>
+                        </div>
+                        <div class="payment-method" data-method="bitget">
+                            <img src="{{ url_for('static', filename='images/bitget.png') }}" alt="BitGet" style="height: 40px; width: auto;">
+                            <p class="mb-0 mt-2">BitGet</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="payment_method" name="payment_method" required>
+                </div>
+                
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Deposit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3 class="mb-0">Deposit History</h3>
+        </div>
+        <div class="card-body">
+            {% set deposits = current_user.deposits|sort(attribute='created_at', reverse=true) %}
+            {% if deposits %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for deposit in deposits %}
+                            <tr>
+                                <td>${{ deposit.amount|round(2) }}</td>
+                                <td>{{ deposit.payment_method }}</td>
+                                <td>
+                                    {% if deposit.status == 'pending' %}
+                                        <span class="badge badge-warning">Pending</span>
+                                    {% elif deposit.status == 'approved' %}
+                                        <span class="badge badge-success">Approved</span>
+                                    {% elif deposit.status == 'rejected' %}
+                                        <span class="badge badge-danger">Rejected</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">No deposit history yet.</div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3 class="mb-0">Deposit Instructions</h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <p><strong>Important:</strong> After submitting your deposit request, please contact support with your transaction details for faster approval.</p>
+            </div>
+            
+            <h4 class="mt-3">Deposit Process:</h4>
+            <ol>
+                <li>Enter the amount you want to deposit (between $50 and $5000)</li>
+                <li>Select your preferred payment method (Binance or BitGet)</li>
+                <li>Submit the deposit request</li>
+                <li>You will receive payment instructions</li>
+                <li>Complete the payment according to the instructions</li>
+                <li>Your deposit will be approved within 24 hours after payment confirmation</li>
+            </ol>
+            
+            <h4 class="mt-3">Benefits:</h4>
+            <ul>
+                <li>Start earning 2% daily returns once your deposit is approved</li>
+                <li>Referral commissions are calculated based on deposit amounts</li>
+                <li>Multiple deposits can be made to increase your daily earnings</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 

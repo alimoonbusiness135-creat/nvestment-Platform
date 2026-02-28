@@ -1,0 +1,209 @@
+/* Modern Professional Flash Messages */
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+
+.flash-message {
+    padding: 16px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-medium);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideIn 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+}
+
+.flash-message::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+}
+
+.flash-message.success {
+    background: rgba(8, 145, 178, 0.1);
+    border: 1px solid var(--secondary-color);
+}
+
+.flash-message.success::before {
+    background: var(--secondary-color);
+}
+
+.flash-message.danger {
+    background: rgba(124, 58, 237, 0.1);
+    border: 1px solid var(--accent-color);
+}
+
+.flash-message.danger::before {
+    background: var(--accent-color);
+}
+
+.flash-message.warning {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid var(--warning-color);
+}
+
+.flash-message.warning::before {
+    background: var(--warning-color);
+}
+
+.flash-message.info {
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid var(--primary-color);
+}
+
+.flash-message.info::before {
+    background: var(--primary-color);
+}
+
+.flash-message.deposit {
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid var(--primary-color);
+}
+
+.flash-message.deposit::before {
+    background: var(--primary-color);
+}
+
+.flash-message-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.flash-message.success .flash-message-icon {
+    color: var(--secondary-color);
+}
+
+.flash-message.danger .flash-message-icon {
+    color: var(--accent-color);
+}
+
+.flash-message.warning .flash-message-icon {
+    color: var(--warning-color);
+}
+
+.flash-message.info .flash-message-icon {
+    color: var(--primary-color);
+}
+
+.flash-message.deposit .flash-message-icon {
+    color: var(--primary-color);
+}
+
+.flash-message-content {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-dark);
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.flash-message-content strong {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-style: italic;
+}
+
+.flash-message-content a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.flash-message-content a:hover {
+    text-decoration: none;
+    opacity: 0.9;
+}
+
+.flash-message-close {
+    background: none;
+    border: none;
+    color: var(--text-medium);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.flash-message-close:hover {
+    background: var(--hover-color);
+    color: var(--text-dark);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.flash-message.hiding {
+    animation: slideOut 0.3s ease-out forwards;
+}
+
+/* Special styles for deposit-related messages */
+.flash-message.deposit .flash-message-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.flash-message.deposit .flash-message-content .message-title {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-style: italic;
+}
+
+.flash-message.deposit .flash-message-content .message-action {
+    margin-top: 4px;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.flash-message.deposit .flash-message-content .message-action a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s ease;
+}
+
+.flash-message.deposit .flash-message-content .message-action a:hover {
+    background: #1d4ed8;
+    text-decoration: none;
+} 

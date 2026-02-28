@@ -1,0 +1,78 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Admin - Deleted Accounts{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Deleted Accounts</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-0">Account Deletion Records</h3>
+    </div>
+    <div class="card-body">
+        {% if deleted_accounts %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Deleted At</th>
+                            <th>Deleted By</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for account in deleted_accounts %}
+                        <tr>
+                            <td>{{ account.id }}</td>
+                            <td>{{ account.username }}</td>
+                            <td>{{ account.email }}</td>
+                            <td>{{ account.deleted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                {% if account.deleted_by == 'user' %}
+                                    <span class="badge badge-info">User</span>
+                                {% elif account.deleted_by == 'admin' %}
+                                    <span class="badge badge-warning">Admin</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">{{ account.deleted_by }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ account.reason or 'No reason provided' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No deleted accounts found.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h3 class="mb-0">GDPR Compliance</h3>
+    </div>
+    <div class="card-body">
+        <p>Account deletion records are kept for compliance and security purposes. These records contain minimal identifying information and are automatically purged after 180 days from deletion.</p>
+        
+        <p>According to GDPR regulations, users have the right to be forgotten, and our system complies by:</p>
+        <ul>
+            <li>Permanently removing all personal and financial data</li>
+            <li>Keeping minimal records for security and fraud prevention</li>
+            <li>Automatically purging deletion records after the required retention period</li>
+        </ul>
+        
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Important:</strong> Do not attempt to restore deleted accounts or contact users after account deletion unless required by law enforcement.
+        </div>
+    </div>
+</div>
+{% endblock %} 
