@@ -30,8 +30,8 @@ class User(db.Model, UserMixin):
     referred_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     
     # Timestamps
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     
     # Relationships
     deposits = db.relationship('Deposit', backref='user', lazy=True)
@@ -57,8 +57,8 @@ class Deposit(db.Model):
     status = db.Column(db.String(20), default='pending')  # pending, approved, rejected
     transaction_id = db.Column(db.String(100), nullable=True)
     payment_method = db.Column(db.String(50), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     
     # Relationship
     earnings = db.relationship('Earning', backref='deposit', lazy=True)
@@ -72,7 +72,7 @@ class Earning(db.Model):
     deposit_id = db.Column(db.Integer, db.ForeignKey('deposit.id'), nullable=True)
     amount = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(200), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     
     def __repr__(self):
         return f"Earning(User: {self.user_id}, Amount: ${self.amount})"
@@ -85,8 +85,8 @@ class Withdrawal(db.Model):
     payment_method = db.Column(db.String(50), nullable=True)
     wallet_address = db.Column(db.String(100), nullable=True)
     transaction_id = db.Column(db.String(100), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     
     def __repr__(self):
         return f"Withdrawal(User: {self.user_id}, Amount: ${self.amount}, Status: {self.status})"
@@ -97,7 +97,7 @@ class Referral(db.Model):
     referred_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     level = db.Column(db.Integer, nullable=False)  # 1, 2, or 3
     commission = db.Column(db.Float, default=0.0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     
     def __repr__(self):
         return f"Referral(Referrer: {self.referrer_id}, Referred: {self.referred_id}, Level: {self.level})"
@@ -109,7 +109,7 @@ class Notification(db.Model):
     message = db.Column(db.Text, nullable=False)
     is_read = db.Column(db.Boolean, default=False)
     is_global = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     
     def __repr__(self):
         return f"Notification(User: {self.user_id}, Title: {self.title})"
@@ -118,7 +118,7 @@ class DeletedAccount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), nullable=False)
-    deleted_at = db.Column(db.DateTime, default=datetime.utcnow)
+    deleted_at = db.Column(db.DateTime, default=datetime.datetime.now)
     deleted_by = db.Column(db.String(20), default="user")  # "user" or "admin"
     reason = db.Column(db.Text, nullable=True)
     
@@ -129,7 +129,7 @@ class PasswordReset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), nullable=False)
     token = db.Column(db.String(100), nullable=False, unique=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     used = db.Column(db.Boolean, default=False)
     
     def __repr__(self):
@@ -139,7 +139,7 @@ class ProfitCollection(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    collected_at = db.Column(db.DateTime, default=datetime.utcnow)
+    collected_at = db.Column(db.DateTime, default=datetime.datetime.now)
     
     # Relationship
     user = db.relationship('User', backref=db.backref('profit_collections', lazy=True))
@@ -153,7 +153,7 @@ class ReferralBonus(db.Model):
     milestone = db.Column(db.Integer, nullable=False)  # 50 or 100 referrals
     amount = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(20), default='pending')  # pending, claimed
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     claimed_at = db.Column(db.DateTime, nullable=True)
     
     # Relationship
@@ -166,7 +166,7 @@ class TwoFactorAuth(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, unique=True)
     secret_key = db.Column(db.String(32), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     backup_codes = db.Column(db.Text, nullable=True)  # Stored as JSON string
     
     def __repr__(self):
