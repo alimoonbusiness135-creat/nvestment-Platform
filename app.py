@@ -19,6 +19,17 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-key-for-dev')
 # Use absolute path for database
 db_path = os.getenv('DATABASE_URI')
+if db_path and db_path.startswith('sqlite:///'):
+    # Convert relative sqlite path to absolute
+    rel_path = db_path.replace('sqlite:///', '')
+    if not os.path.isabs(rel_path):
+        abs_db_path = os.path.join(basedir, rel_path)
+        # Ensure the directory exists
+        db_dir = os.path.dirname(abs_db_path)
+        if not os.path.exists(db_dir):
+            os.makedirs(db_dir)
+        db_path = 'sqlite:///' + abs_db_path
+
 if not db_path:
     # Ensure instance folder exists
     instance_path = os.path.join(basedir, 'instance')
