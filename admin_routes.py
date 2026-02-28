@@ -1,5 +1,3 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify, abort
-from flask_login import login_required, current_user
 import datetime
 from functools import wraps
 from app import app
@@ -95,7 +93,7 @@ def admin_approve_deposit(deposit_id):
     
     # Approve the deposit
     deposit.status = 'approved'
-    deposit.updated_at = datetime.datetime.utcnow()
+    deposit.updated_at = datetime.datetime.now()
     
     # Update user's deposit balance
     user = User.query.get(deposit.user_id)
@@ -130,7 +128,7 @@ def admin_reject_deposit(deposit_id):
     
     # Reject the deposit
     deposit.status = 'rejected'
-    deposit.updated_at = datetime.datetime.utcnow()
+    deposit.updated_at = datetime.datetime.now()
     
     # Create notification for the user
     notification = Notification(
@@ -170,7 +168,7 @@ def admin_approve_withdrawal(withdrawal_id):
     
     # Approve the withdrawal
     withdrawal.status = 'approved'
-    withdrawal.updated_at = datetime.datetime.utcnow()
+    withdrawal.updated_at = datetime.datetime.now()
     
     # Update user's total withdrawn amount
     user = User.query.get(withdrawal.user_id)
@@ -201,7 +199,7 @@ def admin_reject_withdrawal(withdrawal_id):
     
     # Reject the withdrawal
     withdrawal.status = 'rejected'
-    withdrawal.updated_at = datetime.datetime.utcnow()
+    withdrawal.updated_at = datetime.datetime.now()
     
     # Refund the amount to the user's earning balance
     user = User.query.get(withdrawal.user_id)

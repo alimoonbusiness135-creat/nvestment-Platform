@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
+import datetime
 import os
 from dotenv import load_dotenv
 import uuid
@@ -50,7 +50,7 @@ from models import User, Deposit, Earning, Withdrawal, Notification, Referral, T
 # Make sure SQLAlchemy's metadata reflects the actual database schema
 with app.app_context():
     db.create_all()  # This will create any missing tables and columns
-    print("Database tables created/updated.")
+    print(f"Database tables created/updated at {datetime.datetime.now()}")
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -59,7 +59,7 @@ def load_user(user_id):
 # Add a context processor for passing variables to templates
 @app.context_processor
 def inject_now():
-    return {'now': datetime.utcnow()}
+    return {'now': datetime.datetime.now()}
 
 @app.context_processor
 def inject_unread_notifications():
@@ -102,7 +102,7 @@ def calculate_daily_earnings():
             db.session.add(earning)
         
         db.session.commit()
-        print(f"Daily earnings calculated at {datetime.now()}")
+        print(f"Daily earnings calculated at {datetime.datetime.now()}")
 
 # Initialize scheduler
 scheduler = BackgroundScheduler()

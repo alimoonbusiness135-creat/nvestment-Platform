@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 import uuid
-from datetime import datetime, timedelta
+import datetime
 from app import app
 from extensions import db
 from models import User, Deposit, Earning, Withdrawal, Notification, Referral, DeletedAccount, PasswordReset, ProfitCollection, ReferralBonus
@@ -721,7 +721,7 @@ def claim_referral_bonus():
         milestone=milestone,
         amount=bonus_amount,
         status='claimed',
-        claimed_at=datetime.utcnow()
+        claimed_at=datetime.datetime.now()
     )
     
     # Create earning record
@@ -982,7 +982,7 @@ def reset_password(token):
     
     # Check if token is expired (older than 24 hours)
     token_age = datetime.utcnow() - reset_record.created_at
-    if token_age > timedelta(hours=24):
+    if token_age > datetime.timedelta(hours=24):
         reset_record.used = True
         db.session.commit()
         flash('Password reset link has expired. Please request a new one.', 'danger')

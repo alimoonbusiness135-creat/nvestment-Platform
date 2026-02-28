@@ -1,6 +1,6 @@
 from extensions import db
 from flask_login import UserMixin
-from datetime import datetime
+import datetime
 import uuid
 
 class User(db.Model, UserMixin):
