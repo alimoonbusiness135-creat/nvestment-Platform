@@ -109,13 +109,13 @@ scheduler = BackgroundScheduler()
 scheduler.add_job(func=calculate_daily_earnings, trigger="interval", hours=24)
 scheduler.start()
 
+# Import routes here to avoid circular imports - Must be after app is defined
+from routes import *
+from admin_routes import *
+from two_factor_routes import *
+
 if __name__ == '__main__':
     # Create tables before running app
     create_tables()
     
-    # Import routes here to avoid circular imports
-    from routes import *
-    from admin_routes import *
-    from two_factor_routes import *
-    
-    app.run(debug=True, port=5000, host='0.0.0.0') 
+    app.run(debug=True, port=5000, host='0.0.0.0')
