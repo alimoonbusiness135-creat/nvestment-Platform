@@ -93,6 +93,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>Proof Screenshot:</th>
+                            <td>
+                                {% if deposit.proof_image %}
+                                <span class="text-success"><i class="fas fa-check-circle"></i> Uploaded</span>
+                                <a href="{{ url_for('static', filename='uploads/deposits/' + deposit.proof_image) }}"
+                                    target="_blank" class="btn btn-sm btn-outline-info ml-2">View SS</a>
+                                {% else %}
+                                <span class="text-danger"><i class="fas fa-times-circle"></i> Not Provided</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Deposit Date:</th>
                             <td>{{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
                         </tr>
@@ -103,6 +115,30 @@
                     </tbody>
                 </table>
             </div>
+
+            {% if not deposit.proof_image %}
+            <div class="card mt-4 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-upload mr-2"></i> Upload Payment Proof</h4>
+                </div>
+                <div class="card-body">
+                    <p>If you have already made the payment, please upload a screenshot of your transaction confirmation
+                        below for faster approval.</p>
+                    <form action="{{ url_for('upload_deposit_proof', deposit_id=deposit.id) }}" method="POST"
+                        enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <input type="file" class="form-control" name="proof_image" id="proof_image_details"
+                                    accept="image/*" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-2">
+                            <i class="fas fa-cloud-upload-alt mr-2"></i> Submit Screenshot
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
 
             <div class="text-center mt-4">
                 <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Return to Dashboard</a>

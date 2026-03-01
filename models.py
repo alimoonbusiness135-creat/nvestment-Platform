@@ -57,6 +57,7 @@ class Deposit(db.Model):
     status = db.Column(db.String(20), default='pending')  # pending, approved, rejected
     transaction_id = db.Column(db.String(100), nullable=True)
     payment_method = db.Column(db.String(50), nullable=True)
+    proof_image = db.Column(db.String(100), nullable=True)  # Filename of the proof screenshot
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     

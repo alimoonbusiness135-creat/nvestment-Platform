@@ -34,6 +34,7 @@
                         <th>Amount</th>
                         <th>Method</th>
                         <th>Status</th>
+                        <th>Proof</th>
                         <th>Date</th>
                         <th>Actions</th>
                     </tr>
@@ -56,6 +57,14 @@
                             <span class="badge badge-success">Approved</span>
                             {% elif deposit.status == 'rejected' %}
                             <span class="badge badge-danger">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if deposit.proof_image %}
+                            <a href="{{ url_for('static', filename='uploads/deposits/' + deposit.proof_image) }}"
+                                target="_blank" class="btn btn-sm btn-info">View SS</a>
+                            {% else %}
+                            <span class="text-muted">No SS</span>
                             {% endif %}
                         </td>
                         <td>{{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}</td>

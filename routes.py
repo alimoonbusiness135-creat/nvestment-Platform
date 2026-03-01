@@ -12,6 +12,8 @@ import secrets
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from werkzeug.utils import secure_filename
+import os
 
 # Helper functions
 def get_user_referrals(user_id):
@@ -317,13 +319,30 @@ def deposit():
             flash('Deposit amount must be between $25 and $5000', 'danger')
             return redirect(url_for('deposit'))
         
+        # Handle file upload
+        proof_image_filename = None
+        if 'proof_image' in request.files:
+            file = request.files['proof_image']
+            if file and file.filename != '':
+                # Create upload directory if it doesn't exist
+                upload_dir = os.path.join(app.root_path, 'static', 'uploads', 'deposits')
+                if not os.path.exists(upload_dir):
+                    os.makedirs(upload_dir)
+                
+                # Secure filename and add timestamp to avoid collisions
+                filename = secure_filename(file.filename)
+                timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+                proof_image_filename = f"{timestamp}_{filename}"
+                file.save(os.path.join(upload_dir, proof_image_filename))
+        
         # Create deposit record
         deposit = Deposit(
             user_id=current_user.id,
             amount=amount,
             payment_method=payment_method,
             status='pending',
-            transaction_id=str(uuid.uuid4())
+            transaction_id=str(uuid.uuid4()),
+            proof_image=proof_image_filename
         )
         
         db.session.add(deposit)
@@ -336,7 +355,8 @@ def deposit():
             f"Email: {current_user.email}\n"
             f"Amount: ${amount}\n"
             f"Method: {payment_method}\n"
-            f"Trans ID: {deposit.transaction_id}"
+            f"Trans ID: {deposit.transaction_id}\n"
+            f"Proof SS: {'Uploaded ✅' if proof_image_filename else 'No SS ❌'}"
         )
         admin_notification = Notification(
             user_id=1,  # Assuming admin has ID 1
@@ -417,6 +437,59 @@ def deposit_details(deposit_id):
     return render_template('deposit_details.html', 
                           deposit=deposit, 
                           payment_info=payment_info)
+
+@app.route('/upload-deposit-proof/<int:deposit_id>', methods=['POST'])
+@login_required
+def upload_deposit_proof(deposit_id):
+    deposit = Deposit.query.get_or_404(deposit_id)
+    
+    # Check if the deposit belongs to the current user
+    if deposit.user_id != current_user.id:
+        flash('Access denied', 'danger')
+        return redirect(url_for('dashboard'))
+    
+    if 'proof_image' in request.files:
+        file = request.files['proof_image']
+        if file and file.filename != '':
+            # Create upload directory if it doesn't exist
+            upload_dir = os.path.join(app.root_path, 'static', 'uploads', 'deposits')
+            if not os.path.exists(upload_dir):
+                os.makedirs(upload_dir)
+            
+            # Secure filename and add timestamp to avoid collisions
+            filename = secure_filename(file.filename)
+            timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            proof_image_filename = f"{timestamp}_{filename}"
+            file.save(os.path.join(upload_dir, proof_image_filename))
+            
+            # Update deposit record
+            deposit.proof_image = proof_image_filename
+            db.session.commit()
+            
+            # Create notification for admin
+            admin_message = (
+                f"PROOF UPLOADED FOR DEPOSIT\n"
+                f"User: {current_user.username} (ID: {current_user.id})\n"
+                f"Amount: ${deposit.amount}\n"
+                f"Method: {deposit.payment_method}\n"
+                f"Trans ID: {deposit.transaction_id}\n"
+                f"Status: Proof received! ✅"
+            )
+            admin_notification = Notification(
+                user_id=1,  # Assuming admin has ID 1
+                title='DEPOSIT PROOF RECEIVED',
+                message=admin_message
+            )
+            db.session.add(admin_notification)
+            db.session.commit()
+            
+            flash('Payment proof uploaded successfully! Our team will verify it shortly.', 'success')
+        else:
+            flash('No file selected', 'danger')
+    else:
+        flash('No file part', 'danger')
+        
+    return redirect(url_for('deposit_details', deposit_id=deposit.id))
 
 @app.route('/withdrawal', methods=['GET', 'POST'])
 @login_required
