@@ -128,6 +128,12 @@ def forex_market():
     """Route for the forex market live prices page"""
     return render_template('forex-market.html')
 
+@app.route('/global-presence')
+@app.route('/global_presence')
+def global_presence():
+    """Route for the global presence page"""
+    return render_template('global_presence.html')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
