@@ -47,6 +47,7 @@ instance/
 # User uploaded files
 static/images/profiles/*
 !static/images/profiles/default.jpg
+!static/images/profiles/.gitkeep
 
 # Logs
 logs/

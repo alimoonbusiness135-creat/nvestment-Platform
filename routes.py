@@ -523,8 +523,13 @@ def profile():
         if 'profile_image' in request.files:
             profile_image = request.files['profile_image']
             if profile_image.filename:
+                # Ensure the upload directory exists
+                profiles_dir = os.path.join(app.root_path, 'static/images/profiles')
+                if not os.path.exists(profiles_dir):
+                    os.makedirs(profiles_dir)
+                
                 filename = secure_filename(f"{current_user.id}_{profile_image.filename}")
-                profile_image.save(os.path.join(app.root_path, 'static/images/profiles', filename))
+                profile_image.save(os.path.join(profiles_dir, filename))
                 current_user.profile_image = filename
         
         db.session.commit()
