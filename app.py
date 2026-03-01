@@ -6,7 +6,10 @@ import os
 from dotenv import load_dotenv
 import uuid
 import secrets
-from apscheduler.schedulers.background import BackgroundScheduler
+try:
+    from apscheduler.schedulers.background import BackgroundScheduler
+except ImportError:
+    BackgroundScheduler = None  # Graceful fallback if not installed
 from extensions import db, login_manager
 
 # Load environment variables
@@ -49,8 +52,20 @@ from models import User, Deposit, Earning, Withdrawal, Notification, Referral, T
 
 # Make sure SQLAlchemy's metadata reflects the actual database schema
 with app.app_context():
-    db.create_all()  # This will create any missing tables and columns
-    print(f"Database tables created/updated at {datetime.datetime.now()}")
+    # Ensure required directories exist
+    profile_dir = os.path.join(basedir, 'static', 'images', 'profiles')
+    if not os.path.exists(profile_dir):
+        os.makedirs(profile_dir)
+    
+    upload_dir = os.path.join(basedir, 'static', 'uploads', 'deposits')
+    if not os.path.exists(upload_dir):
+        os.makedirs(upload_dir)
+    
+    try:
+        db.create_all()  # This will create any missing tables and columns
+        print(f"Database tables created/updated at {datetime.datetime.now()}")
+    except Exception as e:
+        print(f"Database initialization error: {e}")
 
 @login_manager.user_loader
 def load_user(user_id):

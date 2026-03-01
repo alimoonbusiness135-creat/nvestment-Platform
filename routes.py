@@ -261,7 +261,7 @@ def dashboard():
     last_collection = ProfitCollection.query.filter_by(user_id=current_user.id).order_by(ProfitCollection.collected_at.desc()).first()
     
     if last_collection:
-        time_since_collection = datetime.datetime.utcnow() - last_collection.collected_at
+        time_since_collection = datetime.datetime.now() - last_collection.collected_at
         if time_since_collection.total_seconds() < 86400:  # 24 hours = 86400 seconds
             can_collect = False
             hours_remaining = 24 - (time_since_collection.total_seconds() / 3600)
@@ -711,7 +711,7 @@ def collect_profit():
     last_collection = ProfitCollection.query.filter_by(user_id=current_user.id).order_by(ProfitCollection.collected_at.desc()).first()
     
     if last_collection:
-        time_since_collection = datetime.datetime.utcnow() - last_collection.collected_at
+        time_since_collection = datetime.datetime.now() - last_collection.collected_at
         if time_since_collection.total_seconds() < 86400:  # 24 hours = 86400 seconds
             hours_remaining = 24 - (time_since_collection.total_seconds() / 3600)
             flash(f'You have already collected your profit today. Please wait {hours_remaining:.1f} hours.', 'warning')
@@ -1101,7 +1101,7 @@ def reset_password(token):
         return redirect(url_for('login'))
     
     # Check if token is expired (older than 24 hours)
-    token_age = datetime.datetime.utcnow() - reset_record.created_at
+    token_age = datetime.datetime.now() - reset_record.created_at
     if token_age > datetime.timedelta(hours=24):
         reset_record.used = True
         db.session.commit()
