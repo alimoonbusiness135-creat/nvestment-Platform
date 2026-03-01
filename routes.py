@@ -328,11 +328,20 @@ def deposit():
         
         db.session.add(deposit)
         
-        # Create notification for admin
+        # Create detailed notification for admin
+        admin_message = (
+            f"NEW DEPOSIT REQUEST\n"
+            f"User: {current_user.username} (ID: {current_user.id})\n"
+            f"Full Name: {current_user.fullname or 'N/A'}\n"
+            f"Email: {current_user.email}\n"
+            f"Amount: ${amount}\n"
+            f"Method: {payment_method}\n"
+            f"Trans ID: {deposit.transaction_id}"
+        )
         admin_notification = Notification(
             user_id=1,  # Assuming admin has ID 1
-            title='New Deposit Request',
-            message=f'User {current_user.username} has submitted a deposit request of ${amount} via {payment_method}.'
+            title='NEW DEPOSIT REQUEST',
+            message=admin_message
         )
         db.session.add(admin_notification)
         db.session.commit()
@@ -444,11 +453,20 @@ def withdrawal():
         
         db.session.add(withdrawal)
         
-        # Create notification for admin
+        # Create detailed notification for admin
+        admin_message = (
+            f"NEW WITHDRAWAL REQUEST\n"
+            f"User: {current_user.username} (ID: {current_user.id})\n"
+            f"Full Name: {current_user.fullname or 'N/A'}\n"
+            f"Email: {current_user.email}\n"
+            f"Amount: ${amount}\n"
+            f"Method: {payment_method}\n"
+            f"Details/Wallet: {wallet_address}"
+        )
         admin_notification = Notification(
             user_id=1,  # Assuming admin has ID 1
-            title='New Withdrawal Request',
-            message=f'User {current_user.username} has requested a withdrawal of ${amount} via {payment_method}.'
+            title='NEW WITHDRAWAL REQUEST',
+            message=admin_message
         )
         db.session.add(admin_notification)
         db.session.commit()
