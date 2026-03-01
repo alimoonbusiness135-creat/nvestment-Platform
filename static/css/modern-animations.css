@@ -1,0 +1,438 @@
+/* Modern Investment Dashboard Animations */
+
+/* ===================================
+   MICRO-INTERACTIONS
+   =================================== */
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes rotate-in {
+    from {
+        opacity: 0;
+        transform: rotate(-10deg) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
+}
+
+@keyframes bounce-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-2deg); }
+    75% { transform: rotate(2deg); }
+}
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Loading animation */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Pulse effect for buttons/badges */
+@keyframes pulse-intense {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* ===================================
+   ELEMENT ANIMATIONS
+   =================================== */
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-rotate { 
+    animation: rotate-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.animate-bounce {
+    animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+}
+
+.animate-slide-down {
+    animation: slide-down 0.5s ease-out;
+}
+
+.animate-slide-up {
+    animation: slide-up 0.5s ease-out;
+}
+
+.animate-blink {
+    animation: blink 1.5s infinite;
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+.animate-pulse-btn {
+    animation: pulse-intense 2s infinite;
+}
+
+/* Hover animations */
+.btn:hover {
+    position: relative;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    border-radius: inherit;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    to {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}
+
+/* Card hover lift effect */
+.card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-highlight {
+    position: relative;
+}
+
+.card-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.card-highlight:hover::before {
+    left: 100%;
+}
+
+/* Icon animations */
+.icon-spin {
+    animation: spin 2s linear infinite;
+}
+
+.icon-pulse {
+    animation: pulse-intense 2s infinite;
+}
+
+.icon-bounce {
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Text animations */
+.text-gradient-animate {
+    background: linear-gradient(90deg, #10b981, #3b82f6, #a855f7, #10b981);
+    background-size: 300% 300%;
+    animation: gradient-shift 6s ease infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ===================================
+   NOTIFICATION & ALERT ANIMATIONS
+   =================================== */
+
+@keyframes slideInNotification {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutNotification {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.notification-enter {
+    animation: slideInNotification 0.4s ease-out;
+}
+
+.notification-exit {
+    animation: slideOutNotification 0.4s ease-in;
+}
+
+/* ===================================
+   FORM ANIMATIONS
+   =================================== */
+
+.form-control {
+    position: relative;
+}
+
+.form-control::placeholder {
+    color: rgba(148, 163, 184, 0.5);
+}
+
+.form-control-filled {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.input-focus-ring {
+    position: relative;
+}
+
+.input-focus-ring::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 10px;
+    border: 2px solid var(--accent-green);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.input-focus-ring:focus-within::after {
+    opacity: 1;
+    animation: pulse-intense 0.6s;
+}
+
+/* ===================================
+   LOADING STATES
+   =================================== */
+
+.skeleton {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+}
+
+.skeleton-text {
+    height: 1rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.skeleton-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+/* ===================================
+   PAGE TRANSITIONS
+   =================================== */
+
+.page-enter {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.page-exit {
+    animation: fadeOutDown 0.3s ease-in;
+}
+
+@keyframes fadeOutDown {
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+/* ===================================
+   TRANSITION UTILITIES
+   =================================== */
+
+.transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-fast {
+    transition: all 0.15s ease;
+}
+
+.transition-slow {
+    transition: all 0.5s ease;
+}
+
+.transition-bounce {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===================================
+   HOVER EFFECTS
+   =================================== */
+
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.hover-glow {
+    transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.hover-scale {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.hover-color {
+    transition: color 0.3s ease;
+}
+
+.hover-color:hover {
+    color: var(--accent-green);
+}
+
+/* ===================================
+   STAGGER EFFECTS
+   =================================== */
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+.stagger-7 { animation-delay: 0.7s; }
+.stagger-8 { animation-delay: 0.8s; }
+
+/* ===================================
+   DARK MODE / LIGHT MODE TRANSITIONS
+   =================================== */
+
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Button ripple effect */
+.btn {
+    position: relative;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: inherit;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+}
+
+.btn:active::before {
+    animation: ripple-effect 0.6s ease-out;
+}
+
+@keyframes ripple-effect {
+    to {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}

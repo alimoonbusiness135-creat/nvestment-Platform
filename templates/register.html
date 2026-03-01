@@ -3,46 +3,67 @@
 {% block title %}Register - Investment Platform{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="auth-logo">
-        <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--primary-color);"></i>
-    </div>
-    <h2 class="auth-title">Create an Account</h2>
-    
-    <form method="POST" action="{{ url_for('register') }}">
-        <div class="form-group">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" required autofocus>
+<div class="d-flex align-items-center justify-content-center min-vh-100" style="padding: 2rem 0;">
+    <div class="card card-highlight" style="max-width: 500px; width: 100%;">
+        <div class="card-body p-5">
+            <div class="text-center mb-4">
+                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <i class="fas fa-user-plus" style="font-size: 2rem; color: white;"></i>
+                </div>
+                <h2 class="mb-2">Create Account</h2>
+                <p class="text-muted">Join thousands of successful investors</p>
+            </div>
+            
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="mb-3">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <input type="text" class="form-control" id="username" name="username" required autofocus placeholder="Choose a username">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="your@email.com">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="Min. 8 characters">
+                    <small class="form-text text-muted">Password must be at least 8 characters long</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="confirm_password" class="form-label">
+                        <i class="fas fa-lock-open"></i> Confirm Password
+                    </label>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="referral_code" class="form-label">
+                        <i class="fas fa-share-alt"></i> Referral Code <span class="badge badge-secondary">Optional</span>
+                    </label>
+                    <input type="text" class="form-control" id="referral_code" name="referral_code" value="{{ referral_code }}" placeholder="Enter referral code to earn bonuses">
+                </div>
+                
+                <button type="submit" class="btn btn-success w-100 btn-lg">
+                    <i class="fas fa-rocket"></i> Get Started Now
+                </button>
+            </form>
+            
+            <div class="text-center mt-4 pt-4 border-top border-opacity-25">
+                <p class="mb-0 text-muted">Already have an account? 
+                    <a href="{{ url_for('login') }}" class="text-decoration-none" style="color: var(--accent-green); font-weight: 600;">
+                        Sign in here
+                    </a>
+                </p>
+            </div>
         </div>
-        
-        <div class="form-group">
-            <label for="email" class="form-label">Email Address</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-            <small class="form-text">Password must be at least 8 characters long</small>
-        </div>
-        
-        <div class="form-group">
-            <label for="confirm_password" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="referral_code" class="form-label">Referral Code (Optional)</label>
-            <input type="text" class="form-control" id="referral_code" name="referral_code" value="{{ referral_code }}">
-        </div>
-        
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
-        </div>
-    </form>
-    
-    <div class="auth-footer">
-        <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
     </div>
 </div>
 {% endblock %} 

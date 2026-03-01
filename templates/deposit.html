@@ -3,149 +3,230 @@
 {% block title %}Deposit - Investment Platform{% endblock %}
 
 {% block content %}
-<div class="dashboard-header">
-    <h1>Make a Deposit</h1>
-    <p class="text-muted">Minimum $25, Maximum $5000</p>
+<div class="dashboard-header animate-fade-in">
+    <h1><i class="fas fa-wallet"></i> Make a Deposit</h1>
+    <p class="text-muted"><i class="fas fa-info-circle"></i> Minimum $25 • Maximum $5,000</p>
 </div>
 
-<div class="deposit-form-container">
-    <div class="card">
-        <div class="card-header">
-            <h3 class="mb-0">Deposit Form</h3>
-        </div>
-        <div class="card-body">
+<div class="row g-4">
+    <!-- Deposit Form -->
+    <div class="col-lg-8">
+        <div class="card card-highlight hover-lift animate-fade-in">
+            <div class="mb-4">
+                <h3 class="mb-0"><i class="fas fa-coins"></i> Deposit Details</h3>
+                <p class="text-muted mb-0">Enter amount and select payment method</p>
+            </div>
+
             <form method="POST" action="{{ url_for('deposit') }}" id="deposit-form" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="amount" class="form-label">Amount (USD)</label>
-                    <input type="number" class="form-control" id="amount" name="amount" min="25" max="5000" step="5"
-                        required>
+                <div class="mb-4">
+                    <label for="amount" class="form-label">
+                        <i class="fas fa-dollar-sign"></i> Deposit Amount (USD)
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-light);">$</span>
+                        <input type="number" class="form-control" id="amount" name="amount" min="25" max="5000" step="5" required placeholder="0.00">
+                    </div>
                     <div id="amount-feedback" class="form-text text-danger"></div>
-                    <small class="form-text text-muted">Enter an amount between $25 and $5000</small>
+                    <small class="form-text text-muted">Enter amount between $25 and $5,000</small>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Select Payment Method</label>
-                    <div class="payment-methods">
-                        <div class="payment-method" data-method="jazzcash">
-                            <img src="{{ url_for('static', filename='images/jazzcash.png') }}" alt="JazzCash"
-                                style="height: 40px; width: auto;">
-                            <p class="mb-0 mt-2">JazzCash</p>
+                <div class="mb-4">
+                    <label class="form-label mb-3">
+                        <i class="fas fa-credit-card"></i> Select Payment Method
+                    </label>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="payment-method-card" data-method="jazzcash" style="cursor: pointer; padding: 1.5rem; border: 2px solid var(--border-light); border-radius: 12px; text-align: center; transition: all 0.3s;">
+                                <i class="fas fa-mobile-alt" style="font-size: 2rem; color: #a855f7; margin-bottom: 0.5rem; display: block;"></i>
+                                <p class="mb-0 fw-6">JazzCash</p>
+                                <small class="text-muted">Mobile Money</small>
+                            </div>
                         </div>
-                        <div class="payment-method" data-method="easypaisa">
-                            <img src="{{ url_for('static', filename='images/easypaisa.png') }}" alt="EasyPaisa"
-                                style="height: 40px; width: auto;">
-                            <p class="mb-0 mt-2">EasyPaisa</p>
+                        <div class="col-md-6">
+                            <div class="payment-method-card" data-method="easypaisa" style="cursor: pointer; padding: 1.5rem; border: 2px solid var(--border-light); border-radius: 12px; text-align: center; transition: all 0.3s;">
+                                <i class="fas fa-wallet" style="font-size: 2rem; color: #3b82f6; margin-bottom: 0.5rem; display: block;"></i>
+                                <p class="mb-0 fw-6">EasyPaisa</p>
+                                <small class="text-muted">Mobile Money</small>
+                            </div>
                         </div>
-                        <div class="payment-method" data-method="binance">
-                            <img src="{{ url_for('static', filename='images/binance_bnb.png') }}" alt="Binance"
-                                style="height: 40px; width: auto;">
-                            <p class="mb-0 mt-2">Binance (BNB)</p>
+                        <div class="col-md-6">
+                            <div class="payment-method-card" data-method="binance" style="cursor: pointer; padding: 1.5rem; border: 2px solid var(--border-light); border-radius: 12px; text-align: center; transition: all 0.3s;">
+                                <i class="fas fa-coins" style="font-size: 2rem; color: #f59e0b; margin-bottom: 0.5rem; display: block;"></i>
+                                <p class="mb-0 fw-6">Binance</p>
+                                <small class="text-muted">BNB Smart Chain</small>
+                            </div>
                         </div>
-                        <div class="payment-method" data-method="bitget">
-                            <img src="{{ url_for('static', filename='images/bitget_bnb.png') }}" alt="BitGet"
-                                style="height: 40px; width: auto;">
-                            <p class="mb-0 mt-2">BitGet (BNB)</p>
+                        <div class="col-md-6">
+                            <div class="payment-method-card" data-method="bitget" style="cursor: pointer; padding: 1.5rem; border: 2px solid var(--border-light); border-radius: 12px; text-align: center; transition: all 0.3s;">
+                                <i class="fas fa-gem" style="font-size: 2rem; color: #10b981; margin-bottom: 0.5rem; display: block;"></i>
+                                <p class="mb-0 fw-6">BitGet</p>
+                                <small class="text-muted">BNB Smart Chain</small>
+                            </div>
                         </div>
                     </div>
                     <input type="hidden" id="payment_method" name="payment_method" required>
                 </div>
 
-                <div class="form-group mt-3">
-                    <label for="proof_image" class="form-label">Upload Proof Screenshot (Optional)</label>
-                    <div class="custom-file">
-                        <input type="file" class="form-control" id="proof_image" name="proof_image" accept="image/*">
+                <div class="mb-4">
+                    <label for="proof_image" class="form-label">
+                        <i class="fas fa-image"></i> Payment Proof <span class="badge badge-secondary">Optional</span>
+                    </label>
+                    <div class="upload-area" style="border: 2px dashed var(--border-light); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--accent-green); margin-bottom: 0.5rem; display: block;"></i>
+                        <p class="mb-1 fw-6">Upload Payment Screenshot</p>
+                        <small class="text-muted">Drag and drop or click to upload. Faster approval with proof!</small>
+                        <input type="file" class="form-control" id="proof_image" name="proof_image" accept="image/*" style="display: none;">
                     </div>
-                    <small class="form-text text-muted">Upload a screenshot of your payment confirmation for faster
-                        approval.</small>
                 </div>
 
-                <div class="form-group mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Deposit</button>
-                </div>
+                <button type="submit" class="btn btn-success btn-lg w-100">
+                    <i class="fas fa-check-circle"></i> Submit Deposit
+                </button>
             </form>
         </div>
-    </div>
 
-    <div class="card mt-4">
-        <div class="card-header">
-            <h3 class="mb-0">Deposit History</h3>
-        </div>
-        <div class="card-body">
-            {% set deposits = current_user.deposits|sort(attribute='created_at', reverse=true) %}
-            {% if deposits %}
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Amount</th>
-                            <th>Method</th>
-                            <th>Status</th>
-                            <th>Proof</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for deposit in deposits %}
-                        <tr>
-                            <td>${{ deposit.amount|round(2) }}</td>
-                            <td>{{ deposit.payment_method|capitalize }}</td>
-                            <td>
-                                {% if deposit.status == 'pending' %}
-                                <span class="badge badge-warning">Pending</span>
-                                {% elif deposit.status == 'approved' %}
-                                <span class="badge badge-success">Approved</span>
-                                {% elif deposit.status == 'rejected' %}
-                                <span class="badge badge-danger">Rejected</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if deposit.proof_image %}
-                                <a href="{{ url_for('static', filename='uploads/deposits/' + deposit.proof_image) }}"
-                                    target="_blank" class="btn btn-sm btn-outline-info">View SS</a>
-                                {% else %}
-                                <span class="text-muted">No SS</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="alert alert-info">No deposit history yet.</div>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="card mt-4">
-        <div class="card-header">
-            <h3 class="mb-0">Deposit Instructions</h3>
-        </div>
-        <div class="card-body">
-            <div class="alert alert-info">
-                <p><strong>Important:</strong> After submitting your deposit request, please contact support with your
-                    transaction details for faster approval.</p>
+        <!-- Deposit Instructions -->
+        <div class="card card-highlight hover-lift mt-4 animate-fade-in" style="animation-delay: 0.1s;">
+            <h3 class="mb-3"><i class="fas fa-info-circle"></i> Deposit Instructions</h3>
+            
+            <div class="alert alert-info border-0 rounded-3" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                <i class="fas fa-lightbulb"></i> After submission, contact support for faster approval
             </div>
 
-            <h4 class="mt-3">Deposit Process:</h4>
-            <ol>
-                <li>Enter the amount you want to deposit (between $25 and $5000)</li>
-                <li>Select your preferred payment method (JazzCash, EasyPaisa, Binance, or BitGet)</li>
-                <li>Submit the deposit request</li>
-                <li><strong>Mobile Wallets:</strong> For JazzCash/EasyPaisa, open your app and approve the request.</li>
-                <li><strong>Crypto:</strong> For Binance/BitGet, send funds to the BNB Smart Chain address provided.
-                </li>
-                <li>Your deposit will be approved within 24 hours after payment confirmation</li>
-            </ol>
+            <h5 class="mt-4 mb-3">
+                <i class="fas fa-list-ol"></i> Step-by-Step Process
+            </h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div style="padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+                        <span class="badge badge-success mb-2">Step 1</span>
+                        <p class="mb-0">Enter amount ($25-$5,000)</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+                        <span class="badge badge-success mb-2">Step 2</span>
+                        <p class="mb-0">Choose payment method</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+                        <span class="badge badge-success mb-2">Step 3</span>
+                        <p class="mb-0">Submit form & proof</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+                        <span class="badge badge-success mb-2">Step 4</span>
+                        <p class="mb-0">Approved within 24hrs</p>
+                    </div>
+                </div>
+            </div>
 
-            <h4 class="mt-3">Benefits:</h4>
-            <ul>
-                <li>Start earning 2% daily returns once your deposit is approved</li>
-                <li>Referral commissions are calculated based on deposit amounts</li>
-                <li>Multiple deposits can be made to increase your daily earnings</li>
+            <h5 class="mt-4 mb-3">
+                <i class="fas fa-star"></i> Benefits
+            </h5>
+            <ul class="list-unstyled" style="font-size: 0.95rem;">
+                <li class="mb-2"><i class="fas fa-check-circle text-success"></i> Earn 2% daily returns</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success"></i> Referral commissions from day 1</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success"></i> Flexible withdrawal anytime</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success"></i> Multiple deposits allowed</li>
             </ul>
         </div>
     </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Deposit History -->
+        <div class="card card-highlight hover-lift animate-fade-in" style="animation-delay: 0.2s;">
+            <h3 class="mb-3"><i class="fas fa-history"></i> Recent Deposits</h3>
+
+            {% set deposits = current_user.deposits|sort(attribute='created_at', reverse=true) %}
+            {% if deposits %}
+            <div style="max-height: 400px; overflow-y: auto;">
+                {% for deposit in deposits[:5] %}
+                <div class="p-3 mb-2 rounded border border-opacity-25 hover-glow" style="background: rgba(255, 255, 255, 0.02);">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="mb-1 fw-6">${{ deposit.amount|round(2) }}</h6>
+                            <small class="text-muted">{{ deposit.payment_method|upper }}</small>
+                        </div>
+                        {% if deposit.status == 'pending' %}
+                        <span class="badge badge-warning"><i class="fas fa-hourglass-half"></i> Pending</span>
+                        {% elif deposit.status == 'approved' %}
+                        <span class="badge badge-success"><i class="fas fa-check"></i> Approved</span>
+                        {% elif deposit.status == 'rejected' %}
+                        <span class="badge badge-danger"><i class="fas fa-times"></i> Rejected</span>
+                        {% endif %}
+                    </div>
+                    <small class="text-muted">{{ deposit.created_at.strftime('%b %d, %Y %H:%M') }}</small>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('profile') }}" class="btn btn-outline-secondary w-100 mt-3" style="font-size: 0.9rem;">View All</a>
+            {% else %}
+            <div class="alert alert-info border-0 rounded-2 py-3">
+                <i class="fas fa-info-circle"></i> No deposits yet
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Info Card -->
+        <div class="card border-0 mt-4" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));">
+            <div class="card-body">
+                <h5 class="mb-3"><i class="fas fa-shield-alt"></i> Security</h5>
+                <ul class="list-unstyled" style="font-size: 0.9rem;">
+                    <li class="mb-2"><i class="fas fa-check-circle" style="color: var(--accent-green);"></i> SSL Encrypted</li>
+                    <li class="mb-2"><i class="fas fa-check-circle" style="color: var(--accent-green);"></i> 2FA Protected</li>
+                    <li class="mb-2"><i class="fas fa-check-circle" style="color: var(--accent-green);"></i> Verified Methods</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card border-0 mt-4" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(168, 85, 247, 0.1));">
+            <div class="card-body">
+                <h5 class="mb-3"><i class="fas fa-chart-pie"></i> Daily Earnings</h5>
+                <div class="text-center">
+                    <h3 class="text-success mb-1" style="font-size: 1.5rem;">${{ (current_user.deposit_balance * 0.02)|round(2) }}</h3>
+                    <p class="text-muted mb-0">based on current deposits</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Payment method selection
+    document.querySelectorAll('.payment-method-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.payment-method-card').forEach(c => {
+                c.style.borderColor = 'var(--border-light)';
+                c.style.background = 'transparent';
+            });
+            this.style.borderColor = 'var(--accent-green)';
+            this.style.background = 'rgba(16, 185, 129, 0.1)';
+            document.getElementById('payment_method').value = this.dataset.method;
+        });
+    });
+
+    // File upload area
+    const uploadArea = document.querySelector('.upload-area');
+    const fileInput = document.getElementById('proof_image');
+    
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--accent-green)';
+    });
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = 'var(--border-light)';
+    });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileInput.files = e.dataTransfer.files;
+    });
+});
+</script>
 {% endblock %}
