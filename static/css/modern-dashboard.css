@@ -440,11 +440,11 @@ p {
 }
 
 .animate-fade-in {
-    animation: fadeInUp 0.6s ease-out;
+    animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .animate-slide-in {
-    animation: slideInRight 0.6s ease-out;
+    animation: slideInRight 0.6s ease-out forwards;
 }
 
 .animate-pulse {
@@ -456,10 +456,10 @@ p {
 }
 
 /* Staggered animations */
-.dashboard-grid > :nth-child(1) { animation-delay: 0.1s; }
-.dashboard-grid > :nth-child(2) { animation-delay: 0.2s; }
-.dashboard-grid > :nth-child(3) { animation-delay: 0.3s; }
-.dashboard-grid > :nth-child(4) { animation-delay: 0.4s; }
+.dashboard-grid > :nth-child(1) { animation-delay: 0.1s; animation-fill-mode: forwards; }
+.dashboard-grid > :nth-child(2) { animation-delay: 0.2s; animation-fill-mode: forwards; }
+.dashboard-grid > :nth-child(3) { animation-delay: 0.3s; animation-fill-mode: forwards; }
+.dashboard-grid > :nth-child(4) { animation-delay: 0.4s; animation-fill-mode: forwards; }
 
 /* ===================================
    PROGRESS BARS
@@ -713,7 +713,7 @@ p {
 
 /* Utilities for animations */
 .animate-level-1 {
-    animation: fadeInUp 0.4s ease-out;
+    animation: fadeInUp 0.4s ease-out forwards;
 }
 
 .animate-level-2 {
