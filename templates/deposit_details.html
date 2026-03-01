@@ -24,18 +24,22 @@
                 <div class="col-md-6 mb-4 text-center">
                     <h4>Payment Information</h4>
                     <div class="payment-info-container bg-light p-4 d-inline-block rounded">
-                        {% if deposit.payment_method == 'stripe' %}
-                        <img src="{{ url_for('static', filename='images/stripe.png') }}" alt="Stripe"
-                            class="img-fluid mb-3" style="max-height: 100px;">
-                        <p class="h5">Pay via Stripe Link</p>
-                        {% elif deposit.payment_method == 'jazzcash' %}
+                        {% if deposit.payment_method == 'jazzcash' %}
                         <img src="{{ url_for('static', filename='images/jazzcash.png') }}" alt="JazzCash"
                             class="img-fluid mb-3" style="max-height: 100px;">
-                        <p class="h5">Send to JazzCash Account</p>
+                        <p class="h5">JazzCash Wallet Approval</p>
                         {% elif deposit.payment_method == 'easypaisa' %}
                         <img src="{{ url_for('static', filename='images/easypaisa.png') }}" alt="EasyPaisa"
                             class="img-fluid mb-3" style="max-height: 100px;">
-                        <p class="h5">Send to EasyPaisa Account</p>
+                        <p class="h5">EasyPaisa Wallet Approval</p>
+                        {% elif deposit.payment_method == 'binance' %}
+                        <img src="{{ url_for('static', filename='images/binance_bnb.png') }}" alt="Binance"
+                            class="img-fluid mb-3" style="max-height: 100px;">
+                        <p class="h5">Binance (BNB Smart Chain)</p>
+                        {% elif deposit.payment_method == 'bitget' %}
+                        <img src="{{ url_for('static', filename='images/bitget_bnb.png') }}" alt="BitGet"
+                            class="img-fluid mb-3" style="max-height: 100px;">
+                        <p class="h5">BitGet (BNB Smart Chain)</p>
                         {% endif %}
                     </div>
                 </div>
@@ -53,16 +57,17 @@
 
                     <div class="payment-instructions-detailed mt-4">
                         <h5>Instructions</h5>
-                        {% if deposit.payment_method == 'stripe' %}
-                        <p>1. Copy the Stripe payment link above.</p>
-                        <p>2. Open the link in your browser.</p>
-                        <p>3. Complete the payment using your card.</p>
-                        <p>4. Save the receipt or take a screenshot.</p>
+                        {% if deposit.payment_method in ['jazzcash', 'easypaisa'] %}
+                        <p>1. Open your {{ deposit.payment_method|capitalize }} app on your phone.</p>
+                        <p>2. You will receive a <strong>Payment Request</strong> for ${{ deposit.amount|round(2) }}.
+                        </p>
+                        <p>3. Enter your MPIN to <strong>Approve</strong> the request.</p>
+                        <p>4. Once approved, stay on this page for confirmation.</p>
                         {% else %}
-                        <p>1. Open your {{ deposit.payment_method|capitalize }} app.</p>
-                        <p>2. Send the exact amount to the phone number shown above.</p>
-                        <p>3. Ensure the account name matches "Platform Admin".</p>
-                        <p>4. Save the transaction ID or screenshot.</p>
+                        <p>1. Copy the BNB Smart Chain address shown above.</p>
+                        <p>2. Open your crypto wallet (Binance or BitGet).</p>
+                        <p>3. Send exactly ${{ deposit.amount|round(2) }} worth of BNB/USDT (BSC).</p>
+                        <p>4. Save the transaction hash for confirmation.</p>
                         {% endif %}
                     </div>
                 </div>

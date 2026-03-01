@@ -313,8 +313,8 @@ def deposit():
         payment_method = request.form.get('payment_method')
         
         # Validation
-        if amount < 50 or amount > 5000:
-            flash('Deposit amount must be between $50 and $5000', 'danger')
+        if amount < 25 or amount > 5000:
+            flash('Deposit amount must be between $25 and $5000', 'danger')
             return redirect(url_for('deposit'))
         
         # Create deposit record
@@ -396,9 +396,10 @@ def deposit_details(deposit_id):
     
     # Generate payment details based on payment method
     payment_details = {
-        'stripe': 'https://buy.stripe.com/test_placeholder',
-        'jazzcash': '03001234567 (Account Name: Platform Admin)',
-        'easypaisa': '03001234567 (Account Name: Platform Admin)'
+        'jazzcash': 'Wallet Request Sent (Approve in App)',
+        'easypaisa': 'Wallet Request Sent (Approve in App)',
+        'binance': 'BNB Smart Chain Address: [Enter Your BNB Address Here]',
+        'bitget': 'BNB Smart Chain Address: [Enter Your BNB Address Here]'
     }
     
     # Get the payment detail for the selected payment method
@@ -421,8 +422,8 @@ def withdrawal():
             flash('Withdrawal amount must be greater than zero', 'danger')
             return redirect(url_for('withdrawal'))
         
-        if amount < 50 or amount > 5000:
-            flash('Withdrawal amount must be between $50 and $5000', 'danger')
+        if amount < 30 or amount > 5000:
+            flash('Withdrawal amount must be between $30 and $5000', 'danger')
             return redirect(url_for('withdrawal'))
         
         if amount > current_user.earning_balance:
