@@ -10,118 +10,176 @@
             <p class="text-muted">Account Overview</p>
         </div>
         <div>
-            <!-- Referral Bonus Button - Shows card with milestone bonuses -->
-            <button type="button" class="btn btn-lg btn-warning" id="bigBonusBtn">
-                <i class="fas fa-gift"></i> BIG BONUS
+            <!-- Enhanced Big Bonus Button -->
+            <button type="button" class="btn btn-lg btn-warning shadow-sm animate-level-2" id="rewardCenterBtn"
+                style="border-radius: 12px; font-weight: 700; background: linear-gradient(135deg, #f59e0b, #ea580c); border: none; color: white;">
+                <i class="fas fa-gift"></i> REWARDS CENTER
             </button>
         </div>
     </div>
 </div>
 
-<!-- Big Bonus Card - Hidden by default -->
-<div class="card mb-4" id="bigBonusCard" style="display: none;">
-    <div class="card-header bg-warning text-dark">
-        <div class="d-flex justify-content-between align-items-center">
-            <h4 class="mb-0"><i class="fas fa-gift"></i> Referral Milestone Bonuses</h4>
-            <button type="button" class="close" id="closeBonusCard">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="text-center mb-4">
-            <h4>Earn BIG Bonuses by Referring Users!</h4>
-            <p>Refer friends and earn huge one-time bonuses when you reach these milestones:</p>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-1">50 Direct Referrals</h5>
-                                <p class="text-muted mb-0">Your progress: {{ referral_stats.level1 }}/50 referrals</p>
-                            </div>
-                            <div class="text-right">
-                                <h4 class="text-success mb-0">$500</h4>
-                            </div>
-                        </div>
-
-                        <div class="progress mt-2 mb-3">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                style="width: {{ referral_bonuses[50]['progress'] }}%"
-                                aria-valuenow="{{ referral_stats.level1 }}" aria-valuemin="0" aria-valuemax="50"></div>
-                        </div>
-
-                        <div class="text-center">
-                            {% if referral_bonuses[50]['claimed'] %}
-                            <button class="btn btn-secondary btn-block" disabled>
-                                <i class="fas fa-check"></i> Bonus Claimed
-                            </button>
-                            {% elif referral_bonuses[50]['eligible'] %}
-                            <form action="{{ url_for('claim_referral_bonus') }}" method="POST">
-                                <input type="hidden" name="milestone" value="50">
-                                <button type="submit" class="btn btn-success btn-block">
-                                    <i class="fas fa-gift"></i> Claim $500 Bonus
-                                </button>
-                            </form>
-                            {% else %}
-                            <button class="btn btn-secondary btn-block" disabled>
-                                Need {{ 50 - referral_stats.level1 }} More Referrals
-                            </button>
-                            {% endif %}
-                        </div>
+<!-- Reward Center Modal - Modern Glassmorphism Design -->
+<div class="modal fade" id="rewardCenterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 20px; border: none; overflow: hidden; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);">
+            <div class="modal-header border-0 bg-warning text-dark p-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-white rounded-circle p-2 me-3 shadow-sm"
+                        style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-gift text-warning fa-2x"></i>
+                    </div>
+                    <div>
+                        <h3 class="modal-title fw-bold mb-0">Referral Milestone Rewards</h3>
+                        <p class="mb-0 opacity-75">Scale your network and earn massive bonuses</p>
                     </div>
                 </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-1">100 Direct Referrals</h5>
-                                <p class="text-muted mb-0">Your progress: {{ referral_stats.level1 }}/100 referrals</p>
-                            </div>
-                            <div class="text-right">
-                                <h4 class="text-success mb-0">$1,000</h4>
-                            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-light border shadow-sm mb-4" style="border-radius: 12px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block">YOUR PROGRESS</span>
+                            <span class="fw-bold h4 mb-0 text-primary">{{ referral_stats.level1 }} / 1000 Direct
+                                Referrals</span>
                         </div>
-
-                        <div class="progress mt-2 mb-3">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                style="width: {{ referral_bonuses[100]['progress'] }}%"
-                                aria-valuenow="{{ referral_stats.level1 }}" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-
-                        <div class="text-center">
-                            {% if referral_bonuses[100]['claimed'] %}
-                            <button class="btn btn-secondary btn-block" disabled>
-                                <i class="fas fa-check"></i> Bonus Claimed
-                            </button>
-                            {% elif referral_bonuses[100]['eligible'] %}
-                            <form action="{{ url_for('claim_referral_bonus') }}" method="POST">
-                                <input type="hidden" name="milestone" value="100">
-                                <button type="submit" class="btn btn-success btn-block">
-                                    <i class="fas fa-gift"></i> Claim $1,000 Bonus
-                                </button>
-                            </form>
-                            {% else %}
-                            <button class="btn btn-secondary btn-block" disabled>
-                                Need {{ 100 - referral_stats.level1 }} More Referrals
-                            </button>
-                            {% endif %}
-                        </div>
+                        <i class="fas fa-chart-line text-primary fa-2x opacity-25"></i>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="text-center mt-3">
-            <a href="{{ url_for('referrals') }}" class="btn btn-primary">
-                <i class="fas fa-user-plus"></i> Invite More Friends
-            </a>
+                <div class="reward-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <!-- Tier 1: 50 Referrals -->
+                    <div class="reward-tier p-3 border rounded-4 bg-white shadow-sm transition-hover">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-soft-primary text-primary px-3 rounded-pill">STARTER</span>
+                            <h4 class="text-success fw-bold mb-0">$500</h4>
+                        </div>
+                        <h6 class="fw-bold mb-1">50 Direct Referrals</h6>
+                        <div class="progress mb-2" style="height: 8px; border-radius: 10px;">
+                            <div class="progress-bar bg-success" style="width: {{ referral_bonuses[50]['progress'] }}%">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted mb-3">
+                            <span>{{ referral_stats.level1 }}/50</span>
+                            <span>{{ referral_bonuses[50]['progress'] }}%</span>
+                        </div>
+                        {% if referral_bonuses[50]['claimed'] %}
+                        <button class="btn btn-light w-100 disabled" style="border-radius: 10px;"><i
+                                class="fas fa-check-circle text-success me-2"></i>CLAIMED</button>
+                        {% elif referral_bonuses[50]['eligible'] %}
+                        <form action="{{ url_for('claim_referral_bonus') }}" method="POST">
+                            <input type="hidden" name="milestone" value="50">
+                            <button type="submit" class="btn btn-success w-100" style="border-radius: 10px;">CLAIM
+                                REWARD</button>
+                        </form>
+                        {% else %}
+                        <button class="btn btn-outline-secondary w-100 disabled"
+                            style="border-radius: 10px;">LOCKED</button>
+                        {% endif %}
+                    </div>
+
+                    <!-- Tier 2: 100 Referrals -->
+                    <div class="reward-tier p-3 border rounded-4 bg-white shadow-sm transition-hover">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-soft-info text-info px-3 rounded-pill">BOOST</span>
+                            <h4 class="text-success fw-bold mb-0">$1,000</h4>
+                        </div>
+                        <h6 class="fw-bold mb-1">100 Direct Referrals</h6>
+                        <div class="progress mb-2" style="height: 8px; border-radius: 10px;">
+                            <div class="progress-bar bg-info" style="width: {{ referral_bonuses[100]['progress'] }}%">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted mb-3">
+                            <span>{{ referral_stats.level1 }}/100</span>
+                            <span>{{ referral_bonuses[100]['progress'] }}%</span>
+                        </div>
+                        {% if referral_bonuses[100]['claimed'] %}
+                        <button class="btn btn-light w-100 disabled" style="border-radius: 10px;"><i
+                                class="fas fa-check-circle text-success me-2"></i>CLAIMED</button>
+                        {% elif referral_bonuses[100]['eligible'] %}
+                        <form action="{{ url_for('claim_referral_bonus') }}" method="POST">
+                            <input type="hidden" name="milestone" value="100">
+                            <button type="submit" class="btn btn-info text-white w-100"
+                                style="border-radius: 10px;">CLAIM REWARD</button>
+                        </form>
+                        {% else %}
+                        <button class="btn btn-outline-secondary w-100 disabled"
+                            style="border-radius: 10px;">LOCKED</button>
+                        {% endif %}
+                    </div>
+
+                    <!-- Tier 3: 200 Referrals -->
+                    <div class="reward-tier p-3 border rounded-4 bg-white shadow-sm transition-hover">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-soft-warning text-warning px-3 rounded-pill">ELITE</span>
+                            <h4 class="text-success fw-bold mb-0">$2,500</h4>
+                        </div>
+                        <h6 class="fw-bold mb-1">200 Direct Referrals</h6>
+                        <div class="progress mb-2" style="height: 8px; border-radius: 10px;">
+                            <div class="progress-bar bg-warning"
+                                style="width: min(100, (referral_stats.level1 / 200) * 100)%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted mb-3">
+                            <span>{{ referral_stats.level1 }}/200</span>
+                            <span>{{ (referral_stats.level1 / 200 * 100)|round|int }}%</span>
+                        </div>
+                        <button class="btn btn-outline-secondary w-100 disabled"
+                            style="border-radius: 10px;">LOCKED</button>
+                    </div>
+
+                    <!-- Tier 4: 500 Referrals -->
+                    <div class="reward-tier p-3 border rounded-4 bg-white shadow-sm transition-hover">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-soft-danger text-danger px-3 rounded-pill">MASTER</span>
+                            <h4 class="text-success fw-bold mb-0">$6,000</h4>
+                        </div>
+                        <h6 class="fw-bold mb-1">500 Direct Referrals</h6>
+                        <div class="progress mb-2" style="height: 8px; border-radius: 10px;">
+                            <div class="progress-bar bg-danger"
+                                style="width: min(100, (referral_stats.level1 / 500) * 100)%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted mb-3">
+                            <span>{{ referral_stats.level1 }}/500</span>
+                            <span>{{ (referral_stats.level1 / 500 * 100)|round|int }}%</span>
+                        </div>
+                        <button class="btn btn-outline-secondary w-100 disabled"
+                            style="border-radius: 10px;">LOCKED</button>
+                    </div>
+
+                    <!-- Tier 5: 1000 Referrals -->
+                    <div class="reward-tier p-3 border rounded-4 bg-white shadow-sm transition-hover shadow-lg"
+                        style="grid-column: 1 / -1; border: 2px solid #7c3aed !important; background: linear-gradient(to right, #ffffff, #f5f3ff);">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="badge bg-primary text-white px-4 rounded-pill mb-2">PLATINUM LEGEND</span>
+                                <h3 class="fw-bold mb-0">1,000 Direct Referrals</h3>
+                            </div>
+                            <div class="text-end">
+                                <h2 class="text-success fw-bold mb-0">$15,000</h2>
+                                <span class="text-muted small">CASH BONUS</span>
+                            </div>
+                        </div>
+                        <div class="progress mb-2" style="height: 12px; border-radius: 10px; background: #e0e7ff;">
+                            <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
+                                style="width: min(100, (referral_stats.level1 / 1000) * 100)%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between fw-bold mb-3">
+                            <span>{{ (referral_stats.level1 / 1000 * 100)|round(1) }}% COMPLETED</span>
+                            <span class="text-primary">{{ 1000 - referral_stats.level1 }} REMAINING</span>
+                        </div>
+                        <button class="btn btn-primary w-100 btn-lg disabled"
+                            style="border-radius: 15px; font-weight: 800; letter-spacing: 1px;">MYSTERY BOX UNLOCKED AT
+                            100%</button>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-link text-decoration-none" data-bs-dismiss="modal">I'll do this
+                        later</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -398,21 +456,11 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Get elements
-        const bigBonusBtn = document.getElementById('bigBonusBtn');
-        const bigBonusCard = document.getElementById('bigBonusCard');
-        const closeBonusCard = document.getElementById('closeBonusCard');
+        const rewardCenterBtn = document.getElementById('rewardCenterBtn');
+        const rewardModal = new bootstrap.Modal(document.getElementById('rewardCenterModal'));
 
-        // Show bonus card when button is clicked
-        bigBonusBtn.addEventListener('click', function () {
-            bigBonusCard.style.display = 'block';
-            // Scroll to the card
-            bigBonusCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-
-        // Hide bonus card when close button is clicked
-        closeBonusCard.addEventListener('click', function () {
-            bigBonusCard.style.display = 'none';
+        rewardCenterBtn.addEventListener('click', function () {
+            rewardModal.show();
         });
     });
 </script>

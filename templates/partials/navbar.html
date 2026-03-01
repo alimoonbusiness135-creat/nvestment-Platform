@@ -1,11 +1,15 @@
 {# Enhanced Navigation Bar #}
 <nav class="navbar">
     <div class="container">
-        <a href="{{ url_for('dashboard') }}" class="navbar-brand">
+        <a href="{{ url_for('dashboard') }}" class="navbar-brand premium-brand">
             <span class="navbar-brand-logo">
-                <i class="fas fa-chart-line"></i>
+                <i class="fas fa-gem animate-pulse"></i>
             </span>
-            Investment Platform
+            <div class="brand-text-wrapper">
+                <span class="brand-main">ADVANTAGE</span>
+                <span class="brand-sub">PLATFORM</span>
+            </div>
+            <span class="premium-badge">PREMIUM</span>
         </a>
 
         <div class="d-flex align-items-center">
