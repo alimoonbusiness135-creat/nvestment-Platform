@@ -1210,10 +1210,6 @@ def privacy():
 def contact():
     return render_template('contact.html')
 
-@app.route('/global-presence')
-def global_presence():
-    return render_template('global_presence.html')
-
 @app.route('/market-analysis')
 @login_required
 def market_analysis():
