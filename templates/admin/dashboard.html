@@ -3,66 +3,66 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="admin-header">
-    <h1>Admin Dashboard</h1>
-    <p class="text-muted">Welcome to the admin control panel</p>
+<div class="admin-header animate-fade-in" style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">📊 Admin Dashboard</h1>
+    <p class="text-muted" style="font-size: 1.1rem;">Welcome to the admin control panel</p>
 </div>
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="statistic-card bg-primary text-white">
-            <div class="stat-icon"><i class="fas fa-users"></i></div>
-            <h4>Total Users</h4>
-            <p class="value">{{ total_users }}</p>
+<div class="row" style="margin-bottom: 2rem;">
+    <div class="col-md-3 mb-3">
+        <div class="statistic-card bg-primary text-white animate-slide-in" style="border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s;">
+            <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 1rem;"><i class="fas fa-users"></i></div>
+            <h4 style="margin-bottom: 0.5rem; font-weight: 600;">Total Users</h4>
+            <p class="value" style="font-size: 2rem; font-weight: 700; margin: 0;">{{ total_users }}</p>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="statistic-card bg-success text-white">
-            <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
-            <h4>Total Deposits</h4>
-            <p class="value">${{ total_deposit_amount|round(2) }}</p>
-            <p class="count">{{ total_deposits }} transactions</p>
+    <div class="col-md-3 mb-3">
+        <div class="statistic-card bg-success text-white animate-slide-in" style="border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s; animation-delay: 0.1s;">
+            <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 1rem;"><i class="fas fa-money-bill-wave"></i></div>
+            <h4 style="margin-bottom: 0.5rem; font-weight: 600;">Total Deposits</h4>
+            <p class="value" style="font-size: 2rem; font-weight: 700; margin: 0;">${{ total_deposit_amount|round(2) }}</p>
+            <p class="count" style="font-size: 0.9rem; margin: 0.5rem 0 0 0;">{{ total_deposits }} transactions</p>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="statistic-card bg-info text-white">
-            <div class="stat-icon"><i class="fas fa-hand-holding-usd"></i></div>
-            <h4>Total Withdrawals</h4>
-            <p class="value">${{ total_withdrawal_amount|round(2) }}</p>
-            <p class="count">{{ total_withdrawals }} transactions</p>
+    <div class="col-md-3 mb-3">
+        <div class="statistic-card bg-info text-white animate-slide-in" style="border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s; animation-delay: 0.2s;">
+            <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 1rem;"><i class="fas fa-hand-holding-usd"></i></div>
+            <h4 style="margin-bottom: 0.5rem; font-weight: 600;">Total Withdrawals</h4>
+            <p class="value" style="font-size: 2rem; font-weight: 700; margin: 0;">${{ total_withdrawal_amount|round(2) }}</p>
+            <p class="count" style="font-size: 0.9rem; margin: 0.5rem 0 0 0;">{{ total_withdrawals }} transactions</p>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="statistic-card bg-warning text-white">
-            <div class="stat-icon"><i class="fas fa-percentage"></i></div>
-            <h4>Net Profit</h4>
-            <p class="value">${{ (total_deposit_amount - total_withdrawal_amount)|round(2) }}</p>
+    <div class="col-md-3 mb-3">
+        <div class="statistic-card bg-warning text-white animate-slide-in" style="border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s; animation-delay: 0.3s;">
+            <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 1rem;"><i class="fas fa-percentage"></i></div>
+            <h4 style="margin-bottom: 0.5rem; font-weight: 600;">Net Profit</h4>
+            <p class="value" style="font-size: 2rem; font-weight: 700; margin: 0;">${{ (total_deposit_amount - total_withdrawal_amount)|round(2) }}</p>
         </div>
     </div>
 </div>
 
-<div class="row mt-4">
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header">
+<div class="row" style="margin-bottom: 2rem;">
+    <div class="col-lg-6 mb-3">
+        <div class="card animate-fade-in" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+            <div class="card-header" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border-radius: 12px 12px 0 0; border: none;">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">Pending Requests</h3>
+                    <h3 class="mb-0" style="color: white; font-weight: 600;">⏳ Pending Requests</h3>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="padding: 1.5rem;">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="alert alert-warning">
-                            <h4>Pending Deposits</h4>
-                            <p class="display-4">{{ pending_deposits }}</p>
-                            <a href="{{ url_for('admin_deposits', status='pending') }}" class="btn btn-warning btn-sm mt-2">View All</a>
+                        <div class="alert alert-warning" style="border-radius: 8px; padding: 1rem; border: none; background: rgba(255,193,7,0.1);">
+                            <h4 style="color: var(--warning-color); margin-bottom: 0.5rem;">Pending Deposits</h4>
+                            <p class="display-4" style="margin: 0; color: var(--warning-color); font-weight: 700;">{{ pending_deposits }}</p>
+                            <a href="{{ url_for('admin_deposits', status='pending') }}" class="btn btn-warning btn-sm mt-2" style="border-radius: 6px;">View All</a>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="alert alert-warning">
-                            <h4>Pending Withdrawals</h4>
-                            <p class="display-4">{{ pending_withdrawals }}</p>
-                            <a href="{{ url_for('admin_withdrawals', status='pending') }}" class="btn btn-warning btn-sm mt-2">View All</a>
+                        <div class="alert alert-warning" style="border-radius: 8px; padding: 1rem; border: none; background: rgba(255,193,7,0.1);">
+                            <h4 style="color: var(--warning-color); margin-bottom: 0.5rem;">Pending Withdrawals</h4>
+                            <p class="display-4" style="margin: 0; color: var(--warning-color); font-weight: 700;">{{ pending_withdrawals }}</p>
+                            <a href="{{ url_for('admin_withdrawals', status='pending') }}" class="btn btn-warning btn-sm mt-2" style="border-radius: 6px;">View All</a>
                         </div>
                     </div>
                 </div>
@@ -70,47 +70,47 @@
         </div>
     </div>
     
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0">Quick Actions</h3>
+    <div class="col-lg-6 mb-3">
+        <div class="card animate-fade-in" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+            <div class="card-header" style="background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%); border-radius: 12px 12px 0 0; border: none;">
+                <h3 class="mb-0" style="color: white; font-weight: 600;">⚡ Quick Actions</h3>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="padding: 1.5rem;">
                 <div class="row">
                     <div class="col-6 col-md-4 mb-3">
-                        <a href="{{ url_for('admin_users') }}" class="btn btn-outline-primary btn-block py-3">
+                        <a href="{{ url_for('admin_users') }}" class="btn btn-outline-primary btn-block py-3" style="border-radius: 8px; border-width: 2px; transition: all 0.3s;">
                             <i class="fas fa-users fa-2x mb-2"></i><br>
-                            Manage Users
+                            <small>Manage Users</small>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 mb-3">
-                        <a href="{{ url_for('admin_deposits') }}" class="btn btn-outline-success btn-block py-3">
+                        <a href="{{ url_for('admin_deposits') }}" class="btn btn-outline-success btn-block py-3" style="border-radius: 8px; border-width: 2px; transition: all 0.3s;">
                             <i class="fas fa-money-bill-wave fa-2x mb-2"></i><br>
-                            Manage Deposits
+                            <small>Manage Deposits</small>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 mb-3">
-                        <a href="{{ url_for('admin_withdrawals') }}" class="btn btn-outline-info btn-block py-3">
+                        <a href="{{ url_for('admin_withdrawals') }}" class="btn btn-outline-info btn-block py-3" style="border-radius: 8px; border-width: 2px; transition: all 0.3s;">
                             <i class="fas fa-hand-holding-usd fa-2x mb-2"></i><br>
-                            Manage Withdrawals
+                            <small>Manage Withdrawals</small>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 mb-3">
-                        <a href="{{ url_for('admin_notifications') }}" class="btn btn-outline-warning btn-block py-3">
+                        <a href="{{ url_for('admin_notifications') }}" class="btn btn-outline-warning btn-block py-3" style="border-radius: 8px; border-width: 2px; transition: all 0.3s;">
                             <i class="fas fa-bell fa-2x mb-2"></i><br>
-                            Send Notifications
+                            <small>Send Notifications</small>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 mb-3">
-                        <a href="{{ url_for('admin_deleted_accounts') }}" class="btn btn-outline-danger btn-block py-3">
+                        <a href="{{ url_for('admin_deleted_accounts') }}" class="btn btn-outline-danger btn-block py-3" style="border-radius: 8px; border-width: 2px; transition: all 0.3s;">
                             <i class="fas fa-user-slash fa-2x mb-2"></i><br>
-                            Deleted Accounts
+                            <small>Deleted Accounts</small>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 mb-3">
-                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-block py-3">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-block py-3" style="border-radius: 8px; border-width: 2px; transition: all 0.3s;">
                             <i class="fas fa-user-circle fa-2x mb-2"></i><br>
-                            User Dashboard
+                            <small>User Dashboard</small>
                         </a>
                     </div>
                 </div>
@@ -119,38 +119,38 @@
     </div>
 </div>
 
-<div class="row mt-4">
+<div class="row" style="margin-top: 2rem;">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0">Recent Registrations</h3>
+        <div class="card animate-fade-in" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+            <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0; border: none;">
+                <h3 class="mb-0" style="color: white; font-weight: 600;">👥 Recent Registrations</h3>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="padding: 1.5rem;">
                 {% if recent_users %}
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" style="border-collapse: collapse;">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Deposit Balance</th>
-                                <th>Earning Balance</th>
-                                <th>Registered</th>
-                                <th>Actions</th>
+                            <tr style="background-color: rgba(102, 126, 234, 0.1); border-bottom: 2px solid rgba(102, 126, 234, 0.3);">
+                                <th style="padding: 1rem; font-weight: 600;">ID</th>
+                                <th style="padding: 1rem; font-weight: 600;">Username</th>
+                                <th style="padding: 1rem; font-weight: 600;">Email</th>
+                                <th style="padding: 1rem; font-weight: 600;">Deposit Balance</th>
+                                <th style="padding: 1rem; font-weight: 600;">Earning Balance</th>
+                                <th style="padding: 1rem; font-weight: 600;">Registered</th>
+                                <th style="padding: 1rem; font-weight: 600;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for user in recent_users %}
-                            <tr>
-                                <td>{{ user.id }}</td>
-                                <td>{{ user.username }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>${{ user.deposit_balance|round(2) }}</td>
-                                <td>${{ user.earning_balance|round(2) }}</td>
-                                <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                                <td>
-                                    <a href="{{ url_for('admin_user_detail', user_id=user.id) }}" class="btn btn-sm btn-primary">View</a>
+                            <tr style="border-bottom: 1px solid #f0f0f0; transition: all 0.3s;">
+                                <td style="padding: 1rem;">{{ user.id }}</td>
+                                <td style="padding: 1rem;">{{ user.username }}</td>
+                                <td style="padding: 1rem;">{{ user.email }}</td>
+                                <td style="padding: 1rem;">${{ user.deposit_balance|round(2) }}</td>
+                                <td style="padding: 1rem;">${{ user.earning_balance|round(2) }}</td>
+                                <td style="padding: 1rem;">{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td style="padding: 1rem;">
+                                    <a href="{{ url_for('admin_user_detail', user_id=user.id) }}" class="btn btn-sm btn-primary" style="border-radius: 6px;">View</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -158,10 +158,12 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="alert alert-info">No recent registrations.</div>
+                <div class="alert alert-info" style="border-radius: 8px; border: none; background: rgba(23, 162, 184, 0.1);">
+                    No recent registrations.
+                </div>
                 {% endif %}
                 <div class="text-center mt-3">
-                    <a href="{{ url_for('admin_users') }}" class="btn btn-primary">View All Users</a>
+                    <a href="{{ url_for('admin_users') }}" class="btn btn-primary" style="border-radius: 6px; padding: 0.5rem 1.5rem;">View All Users</a>
                 </div>
             </div>
         </div>
