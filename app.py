@@ -70,6 +70,25 @@ with app.app_context():
     try:
         db.create_all()
         print(f"Database tables created/updated at {datetime.datetime.now()}")
+        
+        # Auto-create admin user if doesn't exist
+        admin = User.query.filter_by(id=1).first()
+        if not admin:
+            admin_user = User(
+                id=1,
+                email='alidaniyal555@gmail.com',
+                username='admin',
+                password=generate_password_hash('Alidani555???'),
+                fullname='Admin User',
+                recovery_email='admin_recovery@example.com',
+                recovery_phone='+1234567890',
+                referral_code='ADMIN123'
+            )
+            db.session.add(admin_user)
+            db.session.commit()
+            print(f"✅ Admin user created: admin / alidaniyal555@gmail.com")
+        else:
+            print(f"✅ Admin user exists: {admin.username}")
     except Exception as e:
         print(f"Warning: Database initialization error (will retry on first request): {e}")
 
