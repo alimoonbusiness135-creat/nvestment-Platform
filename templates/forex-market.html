@@ -1,115 +1,197 @@
 {% extends 'base.html' %}
 
-{% block title %}Forex Trading Dashboard - Live Markets{% endblock %}
+{% block title %}Professional Trading Terminal - Live Markets{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/forex_dashboard.css') }}">
 <style>
-    /* Additional tweaks for the specific animation demo context if needed */
-    .flash-message-container {
-        z-index: 2000;
+    :root {
+        --terminal-bg: #f0f3fa;
+        --terminal-card: #ffffff;
+        --terminal-border: #d1d4dc;
+        --accent-blue: #2962ff;
+        --accent-orange: #ff9800;
+        --accent-green: #4caf50;
+        --accent-red: #f44336;
+        --text-main: #131722;
+        --text-muted: #6a6d78;
+    }
+
+    body {
+        background-color: var(--terminal-bg);
+        color: var(--text-main);
+    }
+
+    .terminal-container {
+        padding: 20px;
+        max-width: 1800px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        grid-template-rows: auto auto auto auto;
+        gap: 20px;
+    }
+
+    /* Full Width Header Ticker */
+    .terminal-header {
+        grid-column: 1 / -1;
+        background: var(--terminal-card);
+        border: 1px solid var(--terminal-border);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Main Chart Area */
+    .chart-box {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+        background: var(--terminal-card);
+        border: 1px solid var(--terminal-border);
+        border-radius: 12px;
+        height: 650px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Sidebar Analytics */
+    .sidebar-pane {
+        grid-column: 2 / 3;
+        grid-row: 2 / 4;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Bottom Grid for Heatmap & Calendar */
+    .bottom-grid {
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    /* Full Width Bottom Screener */
+    .screener-pane {
+        grid-column: 1 / -1;
+        grid-row: 4 / 5;
+        background: var(--terminal-card);
+        border: 1px solid var(--terminal-border);
+        border-radius: 12px;
+        padding: 15px;
+        height: 600px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-panel {
+        background: var(--terminal-card);
+        border: 1px solid var(--terminal-border);
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-panel h5 {
+        font-weight: 700;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-main);
+        border-bottom: 2px solid var(--terminal-bg);
+        padding-bottom: 10px;
+    }
+
+    .indicator-status {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent-green);
+        box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    @media (max-width: 1400px) {
+        .terminal-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+        }
+
+        .sidebar-pane,
+        .bottom-grid {
+            grid-column: 1 / -1;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="forex-container animate-level-1">
-    <!-- TradingView Ticker Tape Widget -->
-    <div class="tradingview-widget-container mb-4">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js"
-            async>
-                {
-                    "symbols": [
-                        { "proName": "FOREXCOM:SPX500", "title": "S&P 500" },
-                        { "proName": "FOREXCOM:NSX100", "title": "US Tech 100" },
-                        { "proName": "FX_IDC:EURUSD", "title": "EUR to USD" },
-                        { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" },
-                        { "proName": "BITSTAMP:ETHUSD", "title": "Ethereum" },
-                        { "description": "Gold", "proName": "OANDA:XAUUSD" },
-                        { "description": "Solana", "proName": "BINANCE:SOLUSDT" },
-                        { "description": "BNB", "proName": "BINANCE:BNBUSDT" }
-                    ],
-                        "showSymbolLogo": true,
-                            "isTransparent": true,
-                                "displayMode": "adaptive",
-                                    "colorTheme": "light",
-                                        "locale": "en"
-                }
-            </script>
-    </div>
+<div class="terminal-container animate-level-1">
 
-    <div class="forex-header">
-        <div>
-            <h1>Forex Live Markets</h1>
-            <p class="text-muted">Real-time professional trading data from TradingView</p>
+    <!-- 1. LIVE TICKER TAPE -->
+    <header class="terminal-header">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript"
+                src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                    {
+                        "symbols": [
+                            { "proName": "FOREXCOM:SPX500", "title": "S&P 500" },
+                            { "proName": "FOREXCOM:NSX100", "title": "Nasdaq 100" },
+                            { "proName": "FX_IDC:EURUSD", "title": "EUR/USD" },
+                            { "proName": "BITSTAMP:BTCUSD", "title": "BTC/USD" },
+                            { "proName": "BITSTAMP:ETHUSD", "title": "ETH/USD" },
+                            { "description": "Gold", "proName": "OANDA:XAUUSD" },
+                            { "description": "Crude Oil", "proName": "NYMEX:CL1!" },
+                            { "description": "Solana", "proName": "BINANCE:SOLUSDT" }
+                        ],
+                            "showSymbolLogo": true,
+                                "isTransparent": true,
+                                    "displayMode": "adaptive",
+                                        "colorTheme": "light",
+                                            "locale": "en"
+                    }
+                </script>
         </div>
-        <div class="market-status">
-            <span class="status-dot"></span>
-            <span>Market Live (Verified)</span>
-        </div>
-    </div>
+    </header>
 
-    <!-- TradingView Market Overview Widget -->
-    <div class="tradingview-widget-container mb-4" style="height: 600px;">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript"
-            src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-                {
-                    "colorTheme": "light",
-                        "dateRange": "12M",
-                            "showChart": true,
-                                "locale": "en",
-                                    "width": "100%",
-                                        "height": "100%",
-                                            "largeChartUrl": "",
-                                                "isTransparent": true,
-                                                    "showSymbolLogo": true,
-                                                        "showFloatingTooltip": true,
-                                                            "tabs": [
-                                                                {
-                                                                    "title": "Forex",
-                                                                    "symbols": [
-                                                                        { "s": "FX:EURUSD", "d": "EUR to USD" },
-                                                                        { "s": "FX:GBPUSD", "d": "GBP to USD" },
-                                                                        { "s": "FX:USDJPY", "d": "USD to JPY" },
-                                                                        { "s": "FX:USDCHF", "d": "USD to CHF" },
-                                                                        { "s": "FX:AUDUSD", "d": "AUD to USD" },
-                                                                        { "s": "FX:USDCAD", "d": "USD to CAD" }
-                                                                    ],
-                                                                    "originalTitle": "Forex"
-                                                                },
-                                                                {
-                                                                    "title": "Crypto",
-                                                                    "symbols": [
-                                                                        { "s": "BINANCE:BTCUSDT", "d": "Bitcoin" },
-                                                                        { "s": "BINANCE:ETHUSDT", "d": "Ethereum" },
-                                                                        { "s": "BINANCE:SOLUSDT", "d": "Solana" },
-                                                                        { "s": "BINANCE:BNBUSDT", "d": "BNB" },
-                                                                        { "s": "BINANCE:XRPUSDT", "d": "XRP" },
-                                                                        { "s": "BINANCE:ADAUSDT", "d": "Cardano" }
-                                                                    ],
-                                                                    "originalTitle": "Crypto"
-                                                                },
-                                                                {
-                                                                    "title": "Commodities",
-                                                                    "symbols": [
-                                                                        { "s": "CME_MINI:ES1!", "d": "S&P 500" },
-                                                                        { "s": "CME:6E1!", "d": "Euro" },
-                                                                        { "s": "COMEX:GC1!", "d": "Gold" },
-                                                                        { "s": "NYMEX:CL1!", "d": "Crude Oil" },
-                                                                        { "s": "NYMEX:NG1!", "d": "Natural Gas" }
-                                                                    ],
-                                                                    "originalTitle": "Commodities"
-                                                                }
-                                                            ]
-                }
+    <!-- 2. ADVANCED INTERACTIVE CHART -->
+    <main class="chart-box">
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+            <div id="tradingview_main_chart" style="height:100%;width:100%"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+            <script type="text/javascript">
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": "FX:EURUSD",
+                    "interval": "15",
+                    "timezone": "Etc/UTC",
+                    "theme": "light",
+                    "style": "1",
+                    "locale": "en",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "withdateranges": true,
+                    "hide_side_toolbar": false,
+                    "allow_symbol_change": true,
+                    "details": true,
+                    "hotlist": true,
+                    "calendar": true,
+                    "show_popup_button": true,
+                    "popup_width": "1000",
+                    "popup_height": "650",
+                    "container_id": "tradingview_main_chart"
+                });
             </script>
-    </div>
+        </div>
+    </main>
 
-    <div class="forex-tools">
-        <div class="tool-card animate-level-3">
-            <h4><i class="fas fa-chart-line"></i> Technical Analysis</h4>
+    <!-- 3. SIDEBAR ANALYTICS -->
+    <aside class="sidebar-pane">
+        <!-- Technical Analysis Gauge -->
+        <div class="card-panel">
+            <h5><i class="fas fa-microscope" style="color: var(--accent-blue);"></i> Market Rating</h5>
             <div class="tradingview-widget-container">
                 <div class="tradingview-widget-container__widget"></div>
                 <script type="text/javascript"
@@ -127,10 +209,11 @@
                         }
                     </script>
             </div>
-            <a href="{{ url_for('market_analysis') }}" class="btn btn-outline-primary btn-sm mt-3">Advanced Analysis</a>
         </div>
-        <div class="tool-card animate-level-4">
-            <h4><i class="fas fa-newspaper"></i> Market News</h4>
+
+        <!-- News Timeline -->
+        <div class="card-panel">
+            <h5><i class="fas fa-rss" style="color: var(--accent-red);"></i> Live Signals & News</h5>
             <div class="tradingview-widget-container">
                 <div class="tradingview-widget-container__widget"></div>
                 <script type="text/javascript"
@@ -141,11 +224,88 @@
                                     "isTransparent": true,
                                         "displayMode": "regular",
                                             "width": "100%",
-                                                "height": "350",
+                                                "height": "450",
                                                     "locale": "en"
                         }
                     </script>
             </div>
+        </div>
+    </aside>
+
+    <!-- 4. BOTTOM ANALYTICS -->
+    <div class="bottom-grid">
+        <!-- Forex Heatmap -->
+        <div class="card-panel">
+            <h5><i class="fas fa-fire" style="color: var(--accent-orange);"></i> Currency Strength</h5>
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript"
+                    src="https://s3.tradingview.com/external-embedding/embed-widget-forex-heat-map.js" async>
+                        {
+                            "width": "100%",
+                                "height": "400",
+                                    "currencies": ["EUR", "USD", "JPY", "GBP", "CHF", "AUD", "CAD", "NZD"],
+                                        "isTransparent": true,
+                                            "colorTheme": "light",
+                                                "locale": "en"
+                        }
+                    </script>
+            </div>
+        </div>
+
+        <!-- Economic Calendar -->
+        <div class="card-panel">
+            <h5><i class="fas fa-calendar-check" style="color: var(--accent-blue);"></i> Economic Calendar</h5>
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript"
+                    src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                        {
+                            "colorTheme": "light",
+                                "isTransparent": true,
+                                    "width": "100%",
+                                        "height": "400",
+                                            "locale": "en",
+                                                "importanceFilter": "-1,0,1"
+                        }
+                    </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. ASSET SCREENER -->
+    <section class="screener-pane">
+        <h5><i class="fas fa-filter" style="color: var(--accent-blue);"></i> Professional Market Screener</h5>
+        <div class="tradingview-widget-container" style="height: calc(100% - 45px);">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js"
+                async>
+                    {
+                        "width": "100%",
+                            "height": "100%",
+                                "defaultColumn": "overview",
+                                    "defaultScreen": "general",
+                                        "market": "forex",
+                                            "showToolbar": true,
+                                                "colorTheme": "light",
+                                                    "locale": "en",
+                                                        "isTransparent": true
+                    }
+                </script>
+        </div>
+    </section>
+
+</div>
+
+<!-- Status Footer -->
+<div class="container mb-5">
+    <div class="d-flex justify-content-between align-items-center p-3 bg-white border rounded shadow-sm">
+        <div>
+            <span class="indicator-status me-2"></span>
+            <span class="text-muted small">Terminal Connection: <strong>Secure & Live</strong></span>
+        </div>
+        <div>
+            <p class="mb-0 text-muted small">Institutional Grade Trading Data by TradingView</p>
         </div>
     </div>
 </div>
@@ -153,8 +313,8 @@
 
 {% block extra_js %}
 <script>
-    // TradingView widgets are iframe based and handle their own real-time updates.
-    // No additional JS simulation required.
-    console.log("TradingView Real-time widgets loaded.");
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("Forex Trading Terminal v2.0 - Fully Operational.");
+    });
 </script>
 {% endblock %}
