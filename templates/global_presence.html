@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Global Presence - Investment Platform{% endblock %}
+
+{% block styles %}
+<style>
+    .globe-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 80px 0;
+        border-radius: var(--border-radius-lg);
+        margin-bottom: 50px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .globe-icon {
+        font-size: 15rem;
+        position: absolute;
+        right: -50px;
+        top: -50px;
+        opacity: 0.1;
+    }
+
+    .country-card {
+        background: white;
+        border-radius: var(--border-radius-md);
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s;
+        border: 1px solid var(--border-color);
+        height: 100%;
+    }
+
+    .country-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-medium);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-medium);
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="globe-section animate-level-1">
+    <div class="container text-center">
+        <span class="material-icons-round globe-icon">public</span>
+        <h1 class="display-3 fw-bold mb-3">Our Global Reach</h1>
+        <p class="lead mb-0">Empowering investors across 50+ countries with seamless trading solutions.</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-md-3 animate-level-2">
+            <div class="country-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Countries</div>
+            </div>
+        </div>
+        <div class="col-md-3 animate-level-2">
+            <div class="country-card">
+                <div class="stat-number">1M+</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+        </div>
+        <div class="col-md-3 animate-level-2">
+            <div class="country-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Global Support</div>
+            </div>
+        </div>
+        <div class="col-md-3 animate-level-2">
+            <div class="country-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Secure Access</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row align-items-center g-5 mb-5">
+        <div class="col-lg-6 animate-level-3">
+            <h2 class="fw-bold text-primary mb-4">Expanding Boundaries</h2>
+            <p class="text-muted mb-4">Our platform is designed to overcome geographical barriers. Whether you are in
+                Europe, Asia, Africa, or the Americas, we provide localized payment methods like **Stripe**,
+                **JazzCash**, and **EasyPaisa** to ensure your financial journey is smooth.</p>
+            <ul class="list-unstyled">
+                <li class="mb-2"><span class="material-icons-round align-middle me-2 text-success">check_circle</span>
+                    <strong>Region-specific Compliance</strong> - We adhere to local financial regulations.</li>
+                <li class="mb-2"><span class="material-icons-round align-middle me-2 text-success">check_circle</span>
+                    <strong>Localized Support</strong> - Support teams available in multiple timezones.</li>
+                <li class="mb-2"><span class="material-icons-round align-middle me-2 text-success">check_circle</span>
+                    <strong>Fast Execution</strong> - Edge servers distributed globally for low latency.</li>
+            </ul>
+        </div>
+        <div class="col-lg-6 animate-level-3">
+            <div class="card shadow-lg border-0 bg-light p-4 rounded-4">
+                <h4 class="fw-bold mb-4">Major Regions Covered</h4>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-primary rounded-pill p-2 px-3">United Kingdom</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">Pakistan</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">United States</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">United Arab Emirates</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">Germany</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">Australia</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">Canada</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">South Africa</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">Turkey</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">Brazil</span>
+                    <span class="badge bg-primary rounded-pill p-2 px-3">Singapore</span>
+                </div>
+                <p class="small text-muted mt-4">...and many more. Our network is constantly expanding to bring
+                    financial freedom to every corner of the globe.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -434,6 +434,43 @@
     transform: translate(0);
 }
 
+/* 3D and Enhanced Interactive Animations */
+.perspective-container {
+    perspective: 1000px;
+}
+
+.tilt-card {
+    transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.tilt-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.tilt-card-inner {
+    transform: translateZ(50px); /* Lifts content off the card surface */
+}
+
+.glass-3d {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+/* Float Animation */
+@keyframes float {
+    0% { transform: translateY(0px) rotateX(0deg); }
+    50% { transform: translateY(-10px) rotateX(2deg); }
+    100% { transform: translateY(0px) rotateX(0deg); }
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
 /* Media Queries for Performance Considerations */
 @media (prefers-reduced-motion: reduce) {
     * {

@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}Market Analysis - Live Charts{% endblock %}
+
+{% block styles %}
+<style>
+    .chart-page-container {
+        padding: 30px;
+        background-color: var(--background-color, #ffffff);
+        border-radius: var(--border-radius-lg, 12px);
+        box-shadow: var(--shadow-medium);
+        margin-top: 20px;
+        border: 1px solid var(--border-color, #e5e7eb);
+    }
+
+    .chart-header {
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .main-chart-container {
+        height: 500px;
+        width: 100%;
+        border-radius: var(--border-radius-md);
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        margin-bottom: 30px;
+    }
+
+    .secondary-charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 20px;
+    }
+
+    .small-chart-container {
+        height: 400px;
+        border-radius: var(--border-radius-md);
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+
+    .chart-title {
+        background: #f8fafc;
+        padding: 8px 15px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .chart-info-banner {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f0f7ff;
+        border-left: 4px solid var(--primary-color);
+        border-radius: var(--border-radius-md);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chart-page-container animate-level-1">
+    <div class="chart-header">
+        <div>
+            <h1 class="h2 fw-bold text-primary mb-1">Advanced Market Analysis</h1>
+            <p class="text-muted small mb-0">Real-time technical analysis for top 5 market assets</p>
+        </div>
+        <a href="{{ url_for('animation_demo') }}" class="btn btn-outline-primary btn-sm ripple">
+            <span class="material-icons-round align-middle me-1">arrow_back</span> Dashboard
+        </a>
+    </div>
+
+    <!-- Main GOLD Chart -->
+    <div class="main-chart-container animate-level-2">
+        <div class="chart-title">
+            <span class="material-icons-round fs-6">workspace_premium</span> GOLD (XAU/USD) - Primary Asset
+        </div>
+        <div id="tradingview_gold" style="height: calc(100% - 37px);"></div>
+    </div>
+
+    <!-- Secondary Charts Grid -->
+    <div class="secondary-charts-grid">
+        <div class="small-chart-container animate-level-3">
+            <div class="chart-title">Bitcoin (BTC/USD)</div>
+            <div id="tradingview_btc" style="height: calc(100% - 37px);"></div>
+        </div>
+        <div class="small-chart-container animate-level-3">
+            <div class="chart-title">EUR/USD - Forex Major</div>
+            <div id="tradingview_eurusd" style="height: calc(100% - 37px);"></div>
+        </div>
+        <div class="small-chart-container animate-level-4">
+            <div class="chart-title">NAS100 - Tech Index</div>
+            <div id="tradingview_nas100" style="height: calc(100% - 37px);"></div>
+        </div>
+        <div class="small-chart-container animate-level-4">
+            <div class="chart-title">GBP/USD - Cable</div>
+            <div id="tradingview_gbpusd" style="height: calc(100% - 37px);"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script type="text/javascript">
+        function createWidget(container, symbol) {
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": symbol,
+                "interval": "D",
+                "timezone": "Etc/UTC",
+                "theme": "light",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "allow_symbol_change": true,
+                "container_id": container
+            });
+        }
+
+        window.onload = function () {
+            createWidget("tradingview_gold", "OANDA:XAUUSD");
+            createWidget("tradingview_btc", "BINANCE:BTCUSD");
+            createWidget("tradingview_eurusd", "FX:EURUSD");
+            createWidget("tradingview_nas100", "CURRENCYCOM:NAS100");
+            createWidget("tradingview_gbpusd", "FX:GBPUSD");
+        }
+    </script>
+
+    <div class="chart-info-banner animate-level-5">
+        <h5 class="fw-bold mb-2"><span class="material-icons-round align-middle me-2">insights</span> Analysis Summary
+        </h5>
+        <p class="mb-0 small text-muted">Aap iupper diye gaye 5 top markets ko live analyze kar saktay hain. GOLD sab se
+            top par hai aur baki important assets neechay grid mein hain. Market trends ko closely monitor karein
+            behtareen trading signals ke liye.</p>
+    </div>
+</div>
+{% endblock %}

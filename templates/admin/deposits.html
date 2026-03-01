@@ -12,68 +12,76 @@
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="mb-0">Deposits</h3>
             <div>
-                <a href="{{ url_for('admin_deposits', status='all') }}" class="btn btn-sm {% if status == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
-                <a href="{{ url_for('admin_deposits', status='pending') }}" class="btn btn-sm {% if status == 'pending' %}btn-warning{% else %}btn-outline-warning{% endif %}">Pending</a>
-                <a href="{{ url_for('admin_deposits', status='approved') }}" class="btn btn-sm {% if status == 'approved' %}btn-success{% else %}btn-outline-success{% endif %}">Approved</a>
-                <a href="{{ url_for('admin_deposits', status='rejected') }}" class="btn btn-sm {% if status == 'rejected' %}btn-danger{% else %}btn-outline-danger{% endif %}">Rejected</a>
+                <a href="{{ url_for('admin_deposits', status='all') }}"
+                    class="btn btn-sm {% if status == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
+                <a href="{{ url_for('admin_deposits', status='pending') }}"
+                    class="btn btn-sm {% if status == 'pending' %}btn-warning{% else %}btn-outline-warning{% endif %}">Pending</a>
+                <a href="{{ url_for('admin_deposits', status='approved') }}"
+                    class="btn btn-sm {% if status == 'approved' %}btn-success{% else %}btn-outline-success{% endif %}">Approved</a>
+                <a href="{{ url_for('admin_deposits', status='rejected') }}"
+                    class="btn btn-sm {% if status == 'rejected' %}btn-danger{% else %}btn-outline-danger{% endif %}">Rejected</a>
             </div>
         </div>
     </div>
     <div class="card-body">
         {% if deposits %}
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Amount</th>
-                            <th>Method</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for deposit in deposits %}
-                        <tr>
-                            <td>{{ deposit.id }}</td>
-                            <td>
-                                <a href="{{ url_for('admin_user_detail', user_id=deposit.user_id) }}">
-                                    {{ deposit.user.username }}
-                                </a>
-                            </td>
-                            <td>${{ deposit.amount|round(2) }}</td>
-                            <td>{{ deposit.payment_method }}</td>
-                            <td>
-                                {% if deposit.status == 'pending' %}
-                                    <span class="badge badge-warning">Pending</span>
-                                {% elif deposit.status == 'approved' %}
-                                    <span class="badge badge-success">Approved</span>
-                                {% elif deposit.status == 'rejected' %}
-                                    <span class="badge badge-danger">Rejected</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                            <td>
-                                {% if deposit.status == 'pending' %}
-                                    <form method="POST" action="{{ url_for('admin_approve_deposit', deposit_id=deposit.id) }}" class="d-inline">
-                                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve this deposit?')">Approve</button>
-                                    </form>
-                                    <form method="POST" action="{{ url_for('admin_reject_deposit', deposit_id=deposit.id) }}" class="d-inline">
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reject this deposit?')">Reject</button>
-                                    </form>
-                                {% else %}
-                                    <button type="button" class="btn btn-secondary btn-sm" disabled>Processed</button>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for deposit in deposits %}
+                    <tr>
+                        <td>{{ deposit.id }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_user_detail', user_id=deposit.user_id) }}">
+                                {{ deposit.user.username }}
+                            </a>
+                        </td>
+                        <td>${{ deposit.amount|round(2) }}</td>
+                        <td>{{ deposit.payment_method }}</td>
+                        <td>
+                            {% if deposit.status == 'pending' %}
+                            <span class="badge badge-warning">Pending</span>
+                            {% elif deposit.status == 'approved' %}
+                            <span class="badge badge-success">Approved</span>
+                            {% elif deposit.status == 'rejected' %}
+                            <span class="badge badge-danger">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            {% if deposit.status == 'pending' %}
+                            <form method="POST" action="{{ url_for('admin_approve_deposit', deposit_id=deposit.id) }}"
+                                class="d-inline">
+                                <button type="submit" class="btn btn-success btn-sm"
+                                    onclick="return confirm('Approve this deposit?')">Approve</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('admin_reject_deposit', deposit_id=deposit.id) }}"
+                                class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Reject this deposit?')">Reject</button>
+                            </form>
+                            {% else %}
+                            <button type="button" class="btn btn-secondary btn-sm" disabled>Processed</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="alert alert-info">No deposits found.</div>
+        <div class="alert alert-info">No deposits found.</div>
         {% endif %}
     </div>
 </div>
@@ -93,23 +101,26 @@
             <div class="col-md-3">
                 <div class="statistic-card">
                     <h4>Pending</h4>
-                    <p class="value">${{ deposits|selectattr('status', 'equalto', 'pending')|sum(attribute='amount')|round(2) }}</p>
+                    <p class="value">${{ deposits|selectattr('status', 'equalto',
+                        'pending')|sum(attribute='amount')|round(2) }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="statistic-card">
                     <h4>Approved</h4>
-                    <p class="value">${{ deposits|selectattr('status', 'equalto', 'approved')|sum(attribute='amount')|round(2) }}</p>
+                    <p class="value">${{ deposits|selectattr('status', 'equalto',
+                        'approved')|sum(attribute='amount')|round(2) }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="statistic-card">
                     <h4>Rejected</h4>
-                    <p class="value">${{ deposits|selectattr('status', 'equalto', 'rejected')|sum(attribute='amount')|round(2) }}</p>
+                    <p class="value">${{ deposits|selectattr('status', 'equalto',
+                        'rejected')|sum(attribute='amount')|round(2) }}</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="row mt-4">
             <div class="col-md-6">
                 <h4>Deposits by Payment Method</h4>
@@ -124,14 +135,22 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Binance</td>
-                                <td>{{ deposits|selectattr('payment_method', 'equalto', 'binance')|list|length }}</td>
-                                <td>${{ deposits|selectattr('payment_method', 'equalto', 'binance')|sum(attribute='amount')|round(2) }}</td>
+                                <td>Stripe</td>
+                                <td>{{ deposits|selectattr('payment_method', 'equalto', 'stripe')|list|length }}</td>
+                                <td>${{ deposits|selectattr('payment_method', 'equalto',
+                                    'stripe')|sum(attribute='amount')|round(2) }}</td>
                             </tr>
                             <tr>
-                                <td>BitGet</td>
-                                <td>{{ deposits|selectattr('payment_method', 'equalto', 'bitget')|list|length }}</td>
-                                <td>${{ deposits|selectattr('payment_method', 'equalto', 'bitget')|sum(attribute='amount')|round(2) }}</td>
+                                <td>JazzCash</td>
+                                <td>{{ deposits|selectattr('payment_method', 'equalto', 'jazzcash')|list|length }}</td>
+                                <td>${{ deposits|selectattr('payment_method', 'equalto',
+                                    'jazzcash')|sum(attribute='amount')|round(2) }}</td>
+                            </tr>
+                            <tr>
+                                <td>EasyPaisa</td>
+                                <td>{{ deposits|selectattr('payment_method', 'equalto', 'easypaisa')|list|length }}</td>
+                                <td>${{ deposits|selectattr('payment_method', 'equalto',
+                                    'easypaisa')|sum(attribute='amount')|round(2) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -144,9 +163,11 @@
                     <li class="list-group-item">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>{{ deposit.user.username }}</strong> deposited <strong>${{ deposit.amount|round(2) }}</strong> via {{ deposit.payment_method }}
+                                <strong>{{ deposit.user.username }}</strong> deposited <strong>${{
+                                    deposit.amount|round(2) }}</strong> via {{ deposit.payment_method }}
                             </div>
-                            <span class="badge {% if deposit.status == 'pending' %}badge-warning{% elif deposit.status == 'approved' %}badge-success{% else %}badge-danger{% endif %}">
+                            <span
+                                class="badge {% if deposit.status == 'pending' %}badge-warning{% elif deposit.status == 'approved' %}badge-success{% else %}badge-danger{% endif %}">
                                 {{ deposit.status }}
                             </span>
                         </div>
@@ -158,4 +179,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

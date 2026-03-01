@@ -1,193 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level-Based Animation Demo</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
-    <style>
-        .demo-section {
-            margin: 50px 0;
-            padding: 30px;
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius-md);
-        }
-        
-        .demo-box {
-            width: 100px;
-            height: 100px;
-            background-color: var(--primary-color);
-            margin: 20px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            border-radius: var(--border-radius-sm);
-        }
-        
-        .demo-item {
-            padding: 15px;
-            margin: 10px 0;
-            background-color: white;
-            border-radius: var(--border-radius-sm);
-            box-shadow: var(--shadow-small);
-        }
-        
-        .demo-buttons {
-            margin: 30px 0;
-        }
-        
-        .demo-title {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-        
-        .action-buttons {
-            margin-top: 15px;
-        }
+{% extends 'base.html' %}
 
-        .scroll-section {
-            height: 400px;
-            overflow-y: auto;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1 class="mt-5 animate-level-1">Level-Based Animation Demo</h1>
-        <p class="animate-level-5 delay-100">This page demonstrates the different levels of animations available in the system.</p>
-        
-        <!-- Level-based Animation Demo -->
-        <div class="demo-section">
-            <h2 class="demo-title">Animation Levels</h2>
-            <p>Each box demonstrates a different animation level:</p>
-            
-            <div class="demo-box animate-level-1">Level 1</div>
-            <div class="demo-box animate-level-2">Level 2</div>
-            <div class="demo-box animate-level-3">Level 3</div>
-            <div class="demo-box animate-level-4">Level 4</div>
-            <div class="demo-box animate-level-5">Level 5</div>
-            <div class="demo-box animate-level-6">Level 6</div>
-            <div class="demo-box animate-level-7">Level 7</div>
+{% block title %}Forex Trading Dashboard - Live Markets{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/forex_dashboard.css') }}">
+<style>
+    /* Additional tweaks for the specific animation demo context if needed */
+    .flash-message-container {
+        z-index: 2000;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="forex-container animate-level-1">
+    <div class="forex-header">
+        <div>
+            <h1>Forex Live Markets</h1>
+            <p class="text-muted">Real-time trading prices and market analysis</p>
         </div>
-        
-        <!-- Specialized Animations Demo -->
-        <div class="demo-section">
-            <h2 class="demo-title">Specialized Animations</h2>
-            
-            <div class="demo-buttons">
-                <button class="btn btn-primary btn-animate" data-click-animate="level-bounce">Bounce Effect</button>
-                <button class="btn btn-secondary btn-animate" data-click-animate="level-shake">Shake Effect</button>
-                <button class="btn btn-success btn-animate" data-click-animate="level-tada">Tada Effect</button>
-                <button class="btn btn-danger btn-animate" data-click-animate="level-jello">Jello Effect</button>
-                <button class="btn btn-warning btn-animate-shine">Shine Effect</button>
-            </div>
-        </div>
-        
-        <!-- Staggered Animation Demo -->
-        <div class="demo-section">
-            <h2 class="demo-title">Staggered List Animation</h2>
-            
-            <ul class="stagger-list animate">
-                <li class="demo-item">This is the first item that animates</li>
-                <li class="demo-item">Second item with a slight delay</li>
-                <li class="demo-item">Third item follows after</li>
-                <li class="demo-item">Fourth item in the sequence</li>
-                <li class="demo-item">Fifth and final item</li>
-            </ul>
-            
-            <div class="action-buttons">
-                <button class="btn btn-primary" onclick="resetStaggerAnimation()">Reset Animation</button>
-            </div>
-        </div>
-        
-        <!-- Scroll Animation Demo -->
-        <div class="demo-section">
-            <h2 class="demo-title">Scroll Animation</h2>
-            <p>Scroll down in this container to see elements animate as they come into view:</p>
-            
-            <div class="scroll-section">
-                <div class="fade-in-section demo-item">This section fades in when scrolled into view</div>
-                <div style="height: 150px;"></div>
-                
-                <div class="fade-in-section demo-item">Another section with fade in animation</div>
-                <div style="height: 150px;"></div>
-                
-                <div class="js-animate from-left demo-item">This slides in from the left</div>
-                <div style="height: 150px;"></div>
-                
-                <div class="js-animate from-right demo-item">This slides in from the right</div>
-                <div style="height: 150px;"></div>
-                
-                <div class="sequence-fade demo-item">
-                    <div>This sequence fades in one by one</div>
-                    <div>Second element</div>
-                    <div>Third element</div>
-                    <div>Fourth element</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Hover Animation Demo -->
-        <div class="demo-section">
-            <h2 class="demo-title">Hover Animations</h2>
-            
-            <div class="card card-animate" style="width: 18rem; display: inline-block; margin: 10px;">
-                <div class="card-body">
-                    <h5 class="card-title">Hover Grow</h5>
-                    <p class="card-text">This card grows on hover</p>
-                </div>
-            </div>
-            
-            <div class="card hover-float" style="width: 18rem; display: inline-block; margin: 10px;">
-                <div class="card-body">
-                    <h5 class="card-title">Hover Float</h5>
-                    <p class="card-text">This card floats on hover</p>
-                </div>
-            </div>
-            
-            <div class="card hover-rotate" style="width: 18rem; display: inline-block; margin: 10px;">
-                <div class="card-body">
-                    <h5 class="card-title">Hover Rotate</h5>
-                    <p class="card-text">This card rotates on hover</p>
-                </div>
-            </div>
-            
-            <div class="card hover-glow" style="width: 18rem; display: inline-block; margin: 10px;">
-                <div class="card-body">
-                    <h5 class="card-title">Hover Glow</h5>
-                    <p class="card-text">This card glows on hover</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Continuous Animation Demo -->
-        <div class="demo-section">
-            <h2 class="demo-title">Continuous Animations</h2>
-            
-            <div class="demo-box pulse-continuous">Pulse</div>
-            <div class="demo-box float-continuous">Float</div>
-            <div class="demo-box spin-continuous">Spin</div>
-            <div class="demo-box breath-continuous">Breath</div>
+        <div class="market-status">
+            <span class="status-dot"></span>
+            <span>Market Open (Live)</span>
         </div>
     </div>
-    
-    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
-    <script>
-        function resetStaggerAnimation() {
-            const list = document.querySelector('.stagger-list');
-            list.classList.remove('animate');
-            
-            // Force reflow
-            void list.offsetWidth;
-            
-            list.classList.add('animate');
+
+    <div class="forex-grid" id="market-grid">
+        <!-- Dashboard cards will be injected here by JS -->
+    </div>
+
+    <div class="forex-tools">
+        <div class="tool-card animate-level-3">
+            <h4><i class="fas fa-chart-line"></i> Market Analysis</h4>
+            <p>Our AI-driven algorithms analyze market trends every second to provide you with the most accurate trading
+                signals.</p>
+            <a href="{{ url_for('market_analysis') }}" class="btn btn-outline-primary btn-sm">View Full Analysis</a>
+        </div>
+        <div class="tool-card animate-level-4">
+            <h4><i class="fas fa-history"></i> Recent Activity</h4>
+            <p>Stay updated with the latest trades executed on the platform. High volume detected in <strong>GOLD
+                    (XAU/USD)</strong>.</p>
+            <button class="btn btn-outline-info btn-sm">Activity Log</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Trading Pairs Configuration
+    const tradingPairs = [
+        { name: "GOLD", symbol: "xau/usd", price: 2034.45, digits: 2 },
+        { name: "EUR/USD", symbol: "eur/usd", price: 1.0845, digits: 4 },
+        { name: "GBP/USD", symbol: "gbp/usd", price: 1.2678, digits: 4 },
+        { name: "BTC/USD", symbol: "btc/usd", price: 62450.00, digits: 2 },
+        { name: "ETH/USD", symbol: "eth/usd", price: 3450.25, digits: 2 },
+        { name: "USD/JPY", symbol: "usd/jpy", price: 150.12, digits: 2 },
+        { name: "AUD/USD", symbol: "aud/usd", price: 0.6521, digits: 4 },
+        { name: "USD/CAD", symbol: "usd/cad", price: 1.3542, digits: 4 },
+        { name: "SOL/USD", symbol: "sol/usd", price: 132.45, digits: 2 },
+        { name: "BNB/USD", symbol: "bnb/usd", price: 412.30, digits: 2 },
+        { name: "GBP/JPY", symbol: "gbp/jpy", price: 190.25, digits: 2 },
+        { name: "EUR/JPY", symbol: "eur/jpy", price: 162.80, digits: 2 },
+        { name: "NZD/USD", symbol: "nzd/usd", price: 0.6123, digits: 4 },
+        { name: "USD/CHF", symbol: "usd/chf", price: 0.8812, digits: 4 },
+        { name: "OIL WTI", symbol: "oil/wti", price: 78.45, digits: 2 },
+        { name: "NATGAS", symbol: "gas/usd", price: 1.84, digits: 2 },
+        { name: "NAS100", symbol: "nas100", price: 18025.50, digits: 2 },
+        { name: "US500", symbol: "us500", price: 5088.10, digits: 2 },
+        { name: "US30", symbol: "us30", price: 38950.00, digits: 2 },
+        { name: "XAG/USD", symbol: "xag/usd", price: 22.85, digits: 2 }
+    ];
+
+    const marketGrid = document.getElementById('market-grid');
+
+    // Initialize Dashboard
+    function initDashboard() {
+        tradingPairs.forEach((pair, index) => {
+            const card = document.createElement('div');
+            card.className = `trading-pair-card animate-level-${(index % 5) + 2}`;
+            card.id = `pair-${pair.symbol.replace('/', '-')}`;
+
+            card.innerHTML = `
+                <div class="pair-info">
+                    <span class="pair-name">${pair.name}</span>
+                    <span class="pair-symbol">${pair.symbol}</span>
+                </div>
+                <div class="pair-price" id="price-${pair.symbol.replace('/', '-')}">
+                    ${pair.price.toFixed(pair.digits)}
+                </div>
+                <div class="pair-change" id="change-${pair.symbol.replace('/', '-')}">
+                    <span class="price-up">+0.00%</span>
+                </div>
+                <div class="pair-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">High</div>
+                        <div class="stat-value">${(pair.price * 1.002).toFixed(pair.digits)}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Low</div>
+                        <div class="stat-value">${(pair.price * 0.998).toFixed(pair.digits)}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Vol</div>
+                        <div class="stat-value">${(Math.random() * 10).toFixed(1)}M</div>
+                    </div>
+                </div>
+                <div class="trading-controls">
+                    <button class="btn btn-trade btn-buy" onclick="handleTrade('${pair.name}', 'buy')">Buy</button>
+                    <button class="btn btn-trade btn-sell" onclick="handleTrade('${pair.name}', 'sell')">Sell</button>
+                </div>
+            `;
+            marketGrid.appendChild(card);
+        });
+    }
+
+    // Handle Trade Action
+    window.handleTrade = function (pair, type) {
+        const title = type.toUpperCase() + ' Success!';
+        const message = `You have successfully executed a ${type} order for ${pair}.`;
+
+        // Use flash message system if available in base.html
+        if (typeof createFlashMessage === 'function') {
+            const flashContainer = document.getElementById('flashMessages');
+            flashContainer.appendChild(createFlashMessage(message, type === 'buy' ? 'success' : 'danger'));
+        } else {
+            alert(`${title}\n${message}`);
         }
-    </script>
-</body>
-</html> 
+    };
+
+    // Live Price Simulation
+    function updatePrices() {
+        tradingPairs.forEach(pair => {
+            const symbolId = pair.symbol.replace('/', '-');
+            const priceEl = document.getElementById(`price-${symbolId}`);
+            const changeEl = document.getElementById(`change-${symbolId}`);
+            const cardEl = document.getElementById(`pair-${symbolId}`);
+
+            if (!priceEl) return;
+
+            // Random fluctuation
+            const volatility = 0.0005; // 0.05%
+            const change = (Math.random() - 0.5) * 2 * volatility;
+            const oldPrice = pair.price;
+            pair.price *= (1 + change);
+
+            // Update UI
+            priceEl.textContent = pair.price.toFixed(pair.digits);
+
+            // Dynamic color feedback
+            if (pair.price > oldPrice) {
+                priceEl.className = 'pair-price price-up';
+                cardEl.classList.add('price-tick-up');
+                setTimeout(() => cardEl.classList.remove('price-tick-up'), 500);
+            } else {
+                priceEl.className = 'pair-price price-down';
+                cardEl.classList.add('price-tick-down');
+                setTimeout(() => cardEl.classList.remove('price-tick-down'), 500);
+            }
+
+            // Randomly update change percentage
+            const pct = ((Math.random() * 2) - 1).toFixed(2);
+            changeEl.innerHTML = `<span class="${pct >= 0 ? 'price-up' : 'price-down'}">${pct >= 0 ? '+' : ''}${pct}%</span>`;
+        });
+    }
+
+    // Start everything
+    initDashboard();
+    setInterval(updatePrices, 1500); // Update every 1.5 seconds for visible effect
+
+</script>
+{% endblock %}

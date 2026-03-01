@@ -12,72 +12,82 @@
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="mb-0">Withdrawals</h3>
             <div>
-                <a href="{{ url_for('admin_withdrawals', status='all') }}" class="btn btn-sm {% if status == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
-                <a href="{{ url_for('admin_withdrawals', status='pending') }}" class="btn btn-sm {% if status == 'pending' %}btn-warning{% else %}btn-outline-warning{% endif %}">Pending</a>
-                <a href="{{ url_for('admin_withdrawals', status='approved') }}" class="btn btn-sm {% if status == 'approved' %}btn-success{% else %}btn-outline-success{% endif %}">Approved</a>
-                <a href="{{ url_for('admin_withdrawals', status='rejected') }}" class="btn btn-sm {% if status == 'rejected' %}btn-danger{% else %}btn-outline-danger{% endif %}">Rejected</a>
+                <a href="{{ url_for('admin_withdrawals', status='all') }}"
+                    class="btn btn-sm {% if status == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
+                <a href="{{ url_for('admin_withdrawals', status='pending') }}"
+                    class="btn btn-sm {% if status == 'pending' %}btn-warning{% else %}btn-outline-warning{% endif %}">Pending</a>
+                <a href="{{ url_for('admin_withdrawals', status='approved') }}"
+                    class="btn btn-sm {% if status == 'approved' %}btn-success{% else %}btn-outline-success{% endif %}">Approved</a>
+                <a href="{{ url_for('admin_withdrawals', status='rejected') }}"
+                    class="btn btn-sm {% if status == 'rejected' %}btn-danger{% else %}btn-outline-danger{% endif %}">Rejected</a>
             </div>
         </div>
     </div>
     <div class="card-body">
         {% if withdrawals %}
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Amount</th>
-                            <th>Method</th>
-                            <th>Wallet/Account</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for withdrawal in withdrawals %}
-                        <tr>
-                            <td>{{ withdrawal.id }}</td>
-                            <td>
-                                <a href="{{ url_for('admin_user_detail', user_id=withdrawal.user_id) }}">
-                                    {{ withdrawal.user.username }}
-                                </a>
-                            </td>
-                            <td>${{ withdrawal.amount|round(2) }}</td>
-                            <td>{{ withdrawal.payment_method }}</td>
-                            <td>
-                                <small class="text-muted">{{ withdrawal.wallet_address }}</small>
-                            </td>
-                            <td>
-                                {% if withdrawal.status == 'pending' %}
-                                    <span class="badge badge-warning">Pending</span>
-                                {% elif withdrawal.status == 'approved' %}
-                                    <span class="badge badge-success">Approved</span>
-                                {% elif withdrawal.status == 'rejected' %}
-                                    <span class="badge badge-danger">Rejected</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ withdrawal.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                            <td>
-                                {% if withdrawal.status == 'pending' %}
-                                    <form method="POST" action="{{ url_for('admin_approve_withdrawal', withdrawal_id=withdrawal.id) }}" class="d-inline">
-                                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve this withdrawal?')">Approve</button>
-                                    </form>
-                                    <form method="POST" action="{{ url_for('admin_reject_withdrawal', withdrawal_id=withdrawal.id) }}" class="d-inline">
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reject this withdrawal?')">Reject</button>
-                                    </form>
-                                {% else %}
-                                    <button type="button" class="btn btn-secondary btn-sm" disabled>Processed</button>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Wallet/Account</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for withdrawal in withdrawals %}
+                    <tr>
+                        <td>{{ withdrawal.id }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_user_detail', user_id=withdrawal.user_id) }}">
+                                {{ withdrawal.user.username }}
+                            </a>
+                        </td>
+                        <td>${{ withdrawal.amount|round(2) }}</td>
+                        <td>{{ withdrawal.payment_method }}</td>
+                        <td>
+                            <small class="text-muted">{{ withdrawal.wallet_address }}</small>
+                        </td>
+                        <td>
+                            {% if withdrawal.status == 'pending' %}
+                            <span class="badge badge-warning">Pending</span>
+                            {% elif withdrawal.status == 'approved' %}
+                            <span class="badge badge-success">Approved</span>
+                            {% elif withdrawal.status == 'rejected' %}
+                            <span class="badge badge-danger">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ withdrawal.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            {% if withdrawal.status == 'pending' %}
+                            <form method="POST"
+                                action="{{ url_for('admin_approve_withdrawal', withdrawal_id=withdrawal.id) }}"
+                                class="d-inline">
+                                <button type="submit" class="btn btn-success btn-sm"
+                                    onclick="return confirm('Approve this withdrawal?')">Approve</button>
+                            </form>
+                            <form method="POST"
+                                action="{{ url_for('admin_reject_withdrawal', withdrawal_id=withdrawal.id) }}"
+                                class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Reject this withdrawal?')">Reject</button>
+                            </form>
+                            {% else %}
+                            <button type="button" class="btn btn-secondary btn-sm" disabled>Processed</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="alert alert-info">No withdrawals found.</div>
+        <div class="alert alert-info">No withdrawals found.</div>
         {% endif %}
     </div>
 </div>
@@ -97,23 +107,26 @@
             <div class="col-md-3">
                 <div class="statistic-card">
                     <h4>Pending</h4>
-                    <p class="value">${{ withdrawals|selectattr('status', 'equalto', 'pending')|sum(attribute='amount')|round(2) }}</p>
+                    <p class="value">${{ withdrawals|selectattr('status', 'equalto',
+                        'pending')|sum(attribute='amount')|round(2) }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="statistic-card">
                     <h4>Approved</h4>
-                    <p class="value">${{ withdrawals|selectattr('status', 'equalto', 'approved')|sum(attribute='amount')|round(2) }}</p>
+                    <p class="value">${{ withdrawals|selectattr('status', 'equalto',
+                        'approved')|sum(attribute='amount')|round(2) }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="statistic-card">
                     <h4>Rejected</h4>
-                    <p class="value">${{ withdrawals|selectattr('status', 'equalto', 'rejected')|sum(attribute='amount')|round(2) }}</p>
+                    <p class="value">${{ withdrawals|selectattr('status', 'equalto',
+                        'rejected')|sum(attribute='amount')|round(2) }}</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="row mt-4">
             <div class="col-md-6">
                 <h4>Withdrawals by Payment Method</h4>
@@ -128,14 +141,24 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Binance</td>
-                                <td>{{ withdrawals|selectattr('payment_method', 'equalto', 'binance')|list|length }}</td>
-                                <td>${{ withdrawals|selectattr('payment_method', 'equalto', 'binance')|sum(attribute='amount')|round(2) }}</td>
+                                <td>Stripe</td>
+                                <td>{{ withdrawals|selectattr('payment_method', 'equalto', 'stripe')|list|length }}</td>
+                                <td>${{ withdrawals|selectattr('payment_method', 'equalto',
+                                    'stripe')|sum(attribute='amount')|round(2) }}</td>
                             </tr>
                             <tr>
-                                <td>BitGet</td>
-                                <td>{{ withdrawals|selectattr('payment_method', 'equalto', 'bitget')|list|length }}</td>
-                                <td>${{ withdrawals|selectattr('payment_method', 'equalto', 'bitget')|sum(attribute='amount')|round(2) }}</td>
+                                <td>JazzCash</td>
+                                <td>{{ withdrawals|selectattr('payment_method', 'equalto', 'jazzcash')|list|length }}
+                                </td>
+                                <td>${{ withdrawals|selectattr('payment_method', 'equalto',
+                                    'jazzcash')|sum(attribute='amount')|round(2) }}</td>
+                            </tr>
+                            <tr>
+                                <td>EasyPaisa</td>
+                                <td>{{ withdrawals|selectattr('payment_method', 'equalto', 'easypaisa')|list|length }}
+                                </td>
+                                <td>${{ withdrawals|selectattr('payment_method', 'equalto',
+                                    'easypaisa')|sum(attribute='amount')|round(2) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -148,9 +171,11 @@
                     <li class="list-group-item">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>{{ withdrawal.user.username }}</strong> requested <strong>${{ withdrawal.amount|round(2) }}</strong> via {{ withdrawal.payment_method }}
+                                <strong>{{ withdrawal.user.username }}</strong> requested <strong>${{
+                                    withdrawal.amount|round(2) }}</strong> via {{ withdrawal.payment_method }}
                             </div>
-                            <span class="badge {% if withdrawal.status == 'pending' %}badge-warning{% elif withdrawal.status == 'approved' %}badge-success{% else %}badge-danger{% endif %}">
+                            <span
+                                class="badge {% if withdrawal.status == 'pending' %}badge-warning{% elif withdrawal.status == 'approved' %}badge-success{% else %}badge-danger{% endif %}">
                                 {{ withdrawal.status }}
                             </span>
                         </div>
@@ -162,4 +187,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Live Support - Chat{% endblock %}
+
+{% block styles %}
+<style>
+    .chat-container {
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .chat-header {
+        padding: 20px;
+        background: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .bot-avatar {
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .message {
+        max-width: 80%;
+        padding: 12px 18px;
+        border-radius: 20px;
+        font-size: 0.95rem;
+        position: relative;
+        animation: messageAppear 0.3s ease-out;
+    }
+
+    @keyframes messageAppear {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message.bot {
+        align-self: flex-start;
+        background: white;
+        color: #333;
+        border-bottom-left-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .message.user {
+        align-self: flex-end;
+        background: var(--primary-color);
+        color: white;
+        border-bottom-right-radius: 5px;
+    }
+
+    .chat-input-area {
+        padding: 20px;
+        background: white;
+        border-top: 1px solid #eee;
+        display: flex;
+        gap: 10px;
+    }
+
+    .chat-input {
+        flex: 1;
+        border: 1px solid #ddd;
+        padding: 12px 20px;
+        border-radius: 25px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+
+    .chat-input:focus {
+        border-color: var(--primary-color);
+    }
+
+    .send-btn {
+        width: 45px;
+        height: 45px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .send-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .typing-indicator {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 10px;
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="chat-container animate-level-1">
+                <div class="chat-header">
+                    <div class="bot-avatar">
+                        <span class="material-icons-round">smart_toy</span>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Platform Support Bot</h5>
+                        <small class="opacity-75">Online | Ready to help</small>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        Hello! I am your AI Support Bot. Before we start, please tell me your <strong>Username</strong>
+                        so I can pull up your account details.
+                    </div>
+                </div>
+
+                <div class="px-4 typing-indicator" id="typingIndicator">
+                    Bot is typing...
+                </div>
+
+                <form class="chat-input-area" id="chatForm">
+                    <input type="text" class="chat-input" id="userInput" placeholder="Type your message here..."
+                        required autocomplete="off">
+                    <button type="submit" class="send-btn ripple">
+                        <span class="material-icons-round">send</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatForm = document.getElementById('chatForm');
+    const userInput = document.getElementById('userInput');
+    const typingIndicator = document.getElementById('typingIndicator');
+
+    let state = 'ASKING_USERNAME';
+    let chatUsername = '';
+
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerHTML = text;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTyping(show) {
+        typingIndicator.style.display = show ? 'block' : 'none';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    chatForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        appendMessage(message, 'user');
+        userInput.value = '';
+
+        showTyping(true);
+
+        // Simulation logic as per user request
+        setTimeout(() => {
+            handleBotResponse(message);
+        }, 1000);
+    });
+
+    function handleBotResponse(userMsg) {
+        showTyping(false);
+
+        if (state === 'ASKING_USERNAME') {
+            chatUsername = userMsg;
+            state = 'CHAT_ACTIVE';
+            appendMessage(`Thank you, <strong>${chatUsername}</strong>! I have found your account. How can I help you today?`, 'bot');
+            return;
+        }
+
+        // Send to backend for processing and possible admin escalation
+        fetch('/api/chat/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: userMsg,
+                username: chatUsername
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage(data.reply, 'bot');
+
+                if (data.account_info) {
+                    const infoId = 'account-info-' + Date.now();
+                    let html = `<div id="${infoId}" class="mt-2 p-3 bg-white rounded shadow-sm border border-primary animate-level-3">
+                        <h6 class="fw-bold mb-2">Account Summary</h6>
+                        <div class="small">
+                            <strong>Balance:</strong> $${data.account_info.earning_balance.toFixed(2)}<br>
+                            <strong>Total Deposits:</strong> $${data.account_info.deposit_balance.toFixed(2)}<br>
+                            <div class="mt-2 fw-bold">Recent History:</div>
+                            ${data.account_info.deposits.length > 0 ? 'Deposits: ' + data.account_info.deposits.map(d => `$${d.amount}`).join(', ') : 'No deposits'}<br>
+                            ${data.account_info.withdrawals.length > 0 ? 'Withdrawals: ' + data.account_info.withdrawals.map(w => `$${w.amount}`).join(', ') : 'No withdrawals'}
+                        </div>
+                    </div>`;
+                    appendMessage(html, 'bot');
+
+                    // 30 Second Delete Logic
+                    setTimeout(() => {
+                        const infoEl = document.getElementById(infoId);
+                        if (infoEl) {
+                            infoEl.innerHTML = '<div class="text-danger small fw-bold"><i>[Account Details Expired and Deleted for Security]</i></div>';
+                            setTimeout(() => {
+                                infoEl.closest('.message').remove();
+                            }, 2000);
+                        }
+                    }, 30000);
+                }
+
+                if (data.escalated) {
+                    appendMessage("<em>I have notified the Admin about your issue. They will look into it shortly!</em>", 'bot');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                appendMessage("Sorry, I'm having trouble connecting to the system right now.", 'bot');
+            });
+    }
+</script>
+{% endblock %}

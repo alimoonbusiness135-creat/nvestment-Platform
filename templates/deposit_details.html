@@ -15,42 +15,59 @@
         </div>
         <div class="card-body">
             <div class="alert alert-info">
-                <p><strong>Important:</strong> Please send exactly ${{ deposit.amount|round(2) }} using {{ deposit.payment_method|capitalize }}. After sending, please contact support with your transaction ID for faster approval.</p>
+                <p><strong>Important:</strong> Please send exactly ${{ deposit.amount|round(2) }} using {{
+                    deposit.payment_method|capitalize }}. After sending, please contact support with your transaction ID
+                    for faster approval.</p>
             </div>
-            
+
             <div class="row mt-4">
                 <div class="col-md-6 mb-4 text-center">
-                    <h4>Scan QR Code</h4>
-                    <div class="qr-code-container bg-light p-4 d-inline-block rounded">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ wallet_address }}" alt="QR Code" class="img-fluid">
+                    <h4>Payment Information</h4>
+                    <div class="payment-info-container bg-light p-4 d-inline-block rounded">
+                        {% if deposit.payment_method == 'stripe' %}
+                        <img src="{{ url_for('static', filename='images/stripe.png') }}" alt="Stripe"
+                            class="img-fluid mb-3" style="max-height: 100px;">
+                        <p class="h5">Pay via Stripe Link</p>
+                        {% elif deposit.payment_method == 'jazzcash' %}
+                        <img src="{{ url_for('static', filename='images/jazzcash.png') }}" alt="JazzCash"
+                            class="img-fluid mb-3" style="max-height: 100px;">
+                        <p class="h5">Send to JazzCash Account</p>
+                        {% elif deposit.payment_method == 'easypaisa' %}
+                        <img src="{{ url_for('static', filename='images/easypaisa.png') }}" alt="EasyPaisa"
+                            class="img-fluid mb-3" style="max-height: 100px;">
+                        <p class="h5">Send to EasyPaisa Account</p>
+                        {% endif %}
                     </div>
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
-                    <h4>Deposit Address</h4>
+                    <h4>How to Pay</h4>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="wallet-address" value="{{ wallet_address }}" readonly>
-                        <button class="btn btn-outline-secondary" type="button" id="copy-address" onclick="copyAddress()">
+                        <input type="text" class="form-control" id="wallet-address" value="{{ payment_info }}" readonly>
+                        <button class="btn btn-outline-secondary" type="button" id="copy-address"
+                            onclick="copyAddress()">
                             <i class="fas fa-copy"></i>
                         </button>
                     </div>
-                    <small class="text-muted">Click the button to copy address</small>
-                    
-                    <div class="network-details mt-4">
-                        <h5>Network Details</h5>
-                        {% if deposit.payment_method == 'binance' %}
-                        <p><strong>Network:</strong> BSC (BNB Smart Chain BEP20)</p>
-                        <p><strong>Currency:</strong> USDT</p>
-                        <p><strong>Minimum deposit:</strong> 0.01 USDT</p>
-                        {% elif deposit.payment_method == 'bitget' %}
-                        <p><strong>Network:</strong> TRC20</p>
-                        <p><strong>Currency:</strong> USDT</p>
-                        <p><strong>Minimum deposit:</strong> 0.01 USDT</p>
+                    <small class="text-muted">Click the button to copy payment detail/link</small>
+
+                    <div class="payment-instructions-detailed mt-4">
+                        <h5>Instructions</h5>
+                        {% if deposit.payment_method == 'stripe' %}
+                        <p>1. Copy the Stripe payment link above.</p>
+                        <p>2. Open the link in your browser.</p>
+                        <p>3. Complete the payment using your card.</p>
+                        <p>4. Save the receipt or take a screenshot.</p>
+                        {% else %}
+                        <p>1. Open your {{ deposit.payment_method|capitalize }} app.</p>
+                        <p>2. Send the exact amount to the phone number shown above.</p>
+                        <p>3. Ensure the account name matches "Platform Admin".</p>
+                        <p>4. Save the transaction ID or screenshot.</p>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            
+
             <div class="deposit-summary mt-4">
                 <h4>Deposit Summary</h4>
                 <table class="table">
@@ -81,7 +98,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             <div class="text-center mt-4">
                 <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
             </div>
@@ -90,18 +107,18 @@
 </div>
 
 <script>
-function copyAddress() {
-    var copyText = document.getElementById("wallet-address");
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); /* For mobile devices */
-    document.execCommand("copy");
-    
-    var copyBtn = document.getElementById("copy-address");
-    var originalHTML = copyBtn.innerHTML;
-    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-    setTimeout(function() {
-        copyBtn.innerHTML = originalHTML;
-    }, 2000);
-}
+    function copyAddress() {
+        var copyText = document.getElementById("wallet-address");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
+        document.execCommand("copy");
+
+        var copyBtn = document.getElementById("copy-address");
+        var originalHTML = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(function () {
+            copyBtn.innerHTML = originalHTML;
+        }, 2000);
+    }
 </script>
-{% endblock %} 
+{% endblock %}

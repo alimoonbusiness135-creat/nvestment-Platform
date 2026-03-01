@@ -253,7 +253,7 @@ def dashboard():
     last_collection = ProfitCollection.query.filter_by(user_id=current_user.id).order_by(ProfitCollection.collected_at.desc()).first()
     
     if last_collection:
-        time_since_collection = datetime.utcnow() - last_collection.collected_at
+        time_since_collection = datetime.datetime.utcnow() - last_collection.collected_at
         if time_since_collection.total_seconds() < 86400:  # 24 hours = 86400 seconds
             can_collect = False
             hours_remaining = 24 - (time_since_collection.total_seconds() / 3600)
@@ -327,6 +327,14 @@ def deposit():
         )
         
         db.session.add(deposit)
+        
+        # Create notification for admin
+        admin_notification = Notification(
+            user_id=1,  # Assuming admin has ID 1
+            title='New Deposit Request',
+            message=f'User {current_user.username} has submitted a deposit request of ${amount} via {payment_method}.'
+        )
+        db.session.add(admin_notification)
         db.session.commit()
         
         # Send email notification to admin
@@ -386,18 +394,19 @@ def deposit_details(deposit_id):
         flash('Access denied', 'danger')
         return redirect(url_for('dashboard'))
     
-    # Generate wallet addresses based on payment method
-    wallet_addresses = {
-        'binance': '0xee571674eb9752fe2e89460210166cbcfc2d807',
-        'bitget': 'TRk92CgEEb52BQzmLPFXMGkCPrg3kDs7hX'
+    # Generate payment details based on payment method
+    payment_details = {
+        'stripe': 'https://buy.stripe.com/test_placeholder',
+        'jazzcash': '03001234567 (Account Name: Platform Admin)',
+        'easypaisa': '03001234567 (Account Name: Platform Admin)'
     }
     
-    # Get the wallet address for the selected payment method
-    wallet_address = wallet_addresses.get(deposit.payment_method, '')
+    # Get the payment detail for the selected payment method
+    payment_info = payment_details.get(deposit.payment_method, 'Please contact support for payment details')
     
     return render_template('deposit_details.html', 
                           deposit=deposit, 
-                          wallet_address=wallet_address)
+                          payment_info=payment_info)
 
 @app.route('/withdrawal', methods=['GET', 'POST'])
 @login_required
@@ -433,6 +442,14 @@ def withdrawal():
         current_user.earning_balance -= amount
         
         db.session.add(withdrawal)
+        
+        # Create notification for admin
+        admin_notification = Notification(
+            user_id=1,  # Assuming admin has ID 1
+            title='New Withdrawal Request',
+            message=f'User {current_user.username} has requested a withdrawal of ${amount} via {payment_method}.'
+        )
+        db.session.add(admin_notification)
         db.session.commit()
         
         # Send email notification to admin
@@ -591,7 +608,7 @@ def collect_profit():
     last_collection = ProfitCollection.query.filter_by(user_id=current_user.id).order_by(ProfitCollection.collected_at.desc()).first()
     
     if last_collection:
-        time_since_collection = datetime.utcnow() - last_collection.collected_at
+        time_since_collection = datetime.datetime.utcnow() - last_collection.collected_at
         if time_since_collection.total_seconds() < 86400:  # 24 hours = 86400 seconds
             hours_remaining = 24 - (time_since_collection.total_seconds() / 3600)
             flash(f'You have already collected your profit today. Please wait {hours_remaining:.1f} hours.', 'warning')
@@ -981,7 +998,7 @@ def reset_password(token):
         return redirect(url_for('login'))
     
     # Check if token is expired (older than 24 hours)
-    token_age = datetime.utcnow() - reset_record.created_at
+    token_age = datetime.datetime.utcnow() - reset_record.created_at
     if token_age > datetime.timedelta(hours=24):
         reset_record.used = True
         db.session.commit()
@@ -1072,4 +1089,99 @@ def delete_notification(notification_id):
         return jsonify({'success': True, 'message': 'Notification deleted successfully'})
     except Exception as e:
         db.session.rollback()
-        return jsonify({'success': False, 'message': str(e)}), 500 
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/global-presence')
+def global_presence():
+    return render_template('global_presence.html')
+
+@app.route('/market-analysis')
+@login_required
+def market_analysis():
+    return render_template('market_analysis.html')
+
+@app.route('/chat')
+@login_required
+def chat():
+    return render_template('chat.html')
+
+@app.route('/api/chat/send', methods=['POST'])
+@login_required
+def chat_send():
+    data = request.get_json()
+    user_msg = data.get('message', '').lower()
+    username = data.get('username', 'Unknown')
+    
+    reply = ""
+    escalated = False
+    account_info = None
+    
+    # Simple bot logic
+    if 'details' in user_msg or 'account' in user_msg:
+        # Check if email is provided in the message for verification
+        # This is a bit simplified, usually we'd track state 'AWAITING_EMAIL'
+        if '@' in user_msg:
+            email_provided = next((word for word in user_msg.split() if '@' in word), None)
+            if email_provided == current_user.email:
+                # Get user data
+                deposits = Deposit.query.filter_by(user_id=current_user.id).order_by(Deposit.created_at.desc()).limit(5).all()
+                withdrawals = Withdrawal.query.filter_by(user_id=current_user.id).order_by(Withdrawal.created_at.desc()).limit(5).all()
+                
+                account_info = {
+                    'username': current_user.username,
+                    'email': current_user.email,
+                    'deposit_balance': current_user.deposit_balance,
+                    'earning_balance': current_user.earning_balance,
+                    'deposits': [{'amount': d.amount, 'status': d.status, 'date': d.created_at.strftime('%Y-%m-%d')} for d in deposits],
+                    'withdrawals': [{'amount': w.amount, 'status': w.status, 'date': w.created_at.strftime('%Y-%m-%d')} for w in withdrawals]
+                }
+                reply = "I have verified your identity. Here are your account details below. Note: This info will disappear in 30 seconds for your security!"
+            else:
+                reply = "The email you provided does not match the account record. Please provide the correct email to see your details."
+        else:
+            reply = "I can share your account details, but first, please provide your registered **Email Address** for verification."
+    elif 'deposit' in user_msg:
+        reply = "To make a deposit, go to the 'Deposit' page, choose your method (Stripe, JazzCash, or EasyPaisa), and follow the instructions. Your funds will show up after admin approval."
+    elif 'withdrawal' in user_msg or 'withdraw' in user_msg:
+        reply = "You can request a withdrawal from the 'Withdraw' page once you have at least $50 in your earning balance. It usually takes 24-48 hours to process."
+    elif 'profit' in user_msg or 'earn' in user_msg:
+        reply = "Daily profit is 2% of your active deposits. You can collect it every 24 hours from your Dashboard."
+    elif 'password' in user_msg:
+        reply = "You can change your password from the Profile section or use the 'Forgot Password' link on the login page."
+    else:
+        reply = "I'm not quite sure about that specific issue. Let me notify the Admin for you so they can help you directly."
+        escalated = True
+        
+        # Notify admin
+        try:
+            admin_notif = Notification(
+                user_id=1,
+                title="Support Escalation",
+                message=f"User {username} (Loged in as: {current_user.username}) needs help with: '{user_msg}'"
+            )
+            db.session.add(admin_notif)
+            db.session.commit()
+        except:
+            pass
+
+    return jsonify({
+        'reply': reply,
+        'escalated': escalated,
+        'account_info': account_info
+    })

@@ -1,0 +1,250 @@
+/* Forex Trading Dashboard Styling - Aligned with Platform Theme */
+
+.forex-container {
+    padding: 30px;
+    background-color: var(--background-color, #ffffff);
+    color: var(--text-dark, #111827);
+    border-radius: var(--border-radius-lg, 12px);
+    box-shadow: var(--shadow-medium, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+    margin-top: 20px;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.forex-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    padding-bottom: 20px;
+}
+
+.market-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-medium, #4b5563);
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    animation: status-pulse 2s infinite;
+}
+
+@keyframes status-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.4);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.forex-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.trading-pair-card {
+    background-color: var(--background-color, #ffffff);
+    padding: 24px;
+    border-radius: var(--border-radius-lg, 12px);
+    border: 1px solid var(--border-color, #e5e7eb);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-small, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+}
+
+.trading-pair-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color, #2563eb);
+    box-shadow: var(--shadow-large, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+}
+
+.pair-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.pair-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-dark, #111827);
+}
+
+.pair-symbol {
+    font-size: 0.75rem;
+    color: var(--text-light, #9ca3af);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.pair-price {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.3s ease;
+    color: var(--text-dark);
+}
+
+.price-up {
+    color: #10b981;
+    /* Success Green */
+}
+
+.price-down {
+    color: #ef4444;
+    /* Danger Red */
+}
+
+.pair-change {
+    font-size: 0.875rem;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.pair-stats {
+    display: flex;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+    justify-content: space-between;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    color: var(--text-light, #9ca3af);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.stat-value {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-medium, #4b5563);
+}
+
+/* Tick Animation for Prices */
+.price-tick-up {
+    animation: tick-green 0.8s ease-out;
+}
+
+.price-tick-down {
+    animation: tick-red 0.8s ease-out;
+}
+
+@keyframes tick-green {
+    0% {
+        background-color: rgba(16, 185, 129, 0.1);
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+@keyframes tick-red {
+    0% {
+        background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+/* Trading Controls */
+.trading-controls {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+}
+
+.btn-trade {
+    flex: 1;
+    padding: 10px;
+    font-size: 0.75rem;
+    border-radius: var(--border-radius-md, 8px);
+    text-transform: uppercase;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn-trade:active {
+    transform: scale(0.95);
+}
+
+.btn-buy {
+    background-color: #10b981;
+    color: white;
+}
+
+.btn-sell {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* Dashboard Sidebar Tools */
+.forex-tools {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.tool-card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: var(--border-radius-lg, 12px);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-left: 4px solid var(--primary-color, #2563eb);
+    box-shadow: var(--shadow-small);
+}
+
+.tool-card h4 {
+    margin-top: 0;
+    color: var(--primary-color, #2563eb);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.tool-card p {
+    font-size: 0.9rem;
+    color: var(--text-medium, #4b5563);
+    margin-bottom: 15px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+    .forex-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}

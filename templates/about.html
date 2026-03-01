@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - Investment Platform{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 animate-level-1">
+    <div class="card-body p-5">
+        <h1 class="display-4 mb-4 text-primary fw-bold">About Us</h1>
+        <p class="lead text-muted mb-4">Empowering your financial future through innovative trading and investment
+            solutions.</p>
+
+        <div class="row mt-5">
+            <div class="col-md-6 mb-4">
+                <h3 class="fw-bold mb-3"><span
+                        class="material-icons-round align-middle me-2 text-primary">rocket_launch</span> Our Mission
+                </h3>
+                <p>To provide accessible, transparent, and profitable investment opportunities for everyone, from
+                    beginners to professional traders. We believe that financial freedom should be a reality for all our
+                    users.</p>
+            </div>
+            <div class="col-md-6 mb-4">
+                <h3 class="fw-bold mb-3"><span
+                        class="material-icons-round align-middle me-2 text-primary">visibility</span> Our Vision</h3>
+                <p>To become the world's most trusted and user-centric investment platform, leveraging cutting-edge
+                    technology and real-time market data to simplify the world of finance.</p>
+            </div>
+        </div>
+
+        <hr class="my-5">
+
+        <h2 class="fw-bold mb-4">Why Choose Us?</h2>
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="p-4 bg-light rounded-3 h-100">
+                    <span class="material-icons-round display-5 mb-3 text-success">security</span>
+                    <h5 class="fw-bold">Security First</h5>
+                    <p class="small text-muted mb-0">We use industry-leading encryption and 2FA to ensure your funds and
+                        data are always protected.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="p-4 bg-light rounded-3 h-100">
+                    <span class="material-icons-round display-5 mb-3 text-info">trending_up</span>
+                    <h5 class="fw-bold">Consistent Growth</h5>
+                    <p class="small text-muted mb-0">Our platform is designed to provide steady returns based on real
+                        market performance and smart algorithms.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="p-4 bg-light rounded-3 h-100">
+                    <span class="material-icons-round display-5 mb-3 text-warning">support_agent</span>
+                    <h5 class="fw-bold">24/7 Support</h5>
+                    <p class="small text-muted mb-0">Our dedicated support team is always available to assist you with
+                        any questions or technical issues.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 p-4 bg-primary text-white rounded-4 text-center">
+            <h3 class="fw-bold mb-3">Ready to start your journey?</h3>
+            <p class="mb-4">Join thousands of successful investors who trust our platform daily.</p>
+            <a href="{{ url_for('register') }}" class="btn btn-light btn-lg px-5 fw-bold ripple">Sign Up Now</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
