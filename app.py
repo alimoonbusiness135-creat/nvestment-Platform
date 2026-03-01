@@ -50,22 +50,28 @@ login_manager.init_app(app)
 # Import models - must be done after db is defined
 from models import User, Deposit, Earning, Withdrawal, Notification, Referral, TwoFactorAuth
 
+# Ensure required directories exist (do this before app context)
+profile_dir = os.path.join(basedir, 'static', 'images', 'profiles')
+if not os.path.exists(profile_dir):
+    try:
+        os.makedirs(profile_dir, exist_ok=True)
+    except Exception as e:
+        print(f"Warning: Could not create profiles directory: {e}")
+
+upload_dir = os.path.join(basedir, 'static', 'uploads', 'deposits')
+if not os.path.exists(upload_dir):
+    try:
+        os.makedirs(upload_dir, exist_ok=True)
+    except Exception as e:
+        print(f"Warning: Could not create uploads directory: {e}")
+
 # Make sure SQLAlchemy's metadata reflects the actual database schema
 with app.app_context():
-    # Ensure required directories exist
-    profile_dir = os.path.join(basedir, 'static', 'images', 'profiles')
-    if not os.path.exists(profile_dir):
-        os.makedirs(profile_dir)
-    
-    upload_dir = os.path.join(basedir, 'static', 'uploads', 'deposits')
-    if not os.path.exists(upload_dir):
-        os.makedirs(upload_dir)
-    
     try:
-        db.create_all()  # This will create any missing tables and columns
+        db.create_all()
         print(f"Database tables created/updated at {datetime.datetime.now()}")
     except Exception as e:
-        print(f"Database initialization error: {e}")
+        print(f"Warning: Database initialization error (will retry on first request): {e}")
 
 @login_manager.user_loader
 def load_user(user_id):
