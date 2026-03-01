@@ -123,10 +123,10 @@ def calculate_referral_commission(user_id, deposit_amount):
 def index():
     return render_template('index.html')
 
-@app.route('/animation-demo')
-def animation_demo():
-    """Route for the animation demonstration page"""
-    return render_template('animation_demo.html')
+@app.route('/forex-market')
+def forex_market():
+    """Route for the forex market live prices page"""
+    return render_template('forex-market.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
