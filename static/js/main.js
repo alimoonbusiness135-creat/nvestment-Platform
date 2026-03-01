@@ -174,9 +174,9 @@ function initializeDepositForm() {
         // Validate amount input
         amountInput.addEventListener('input', () => {
             const amount = parseFloat(amountInput.value);
-            if (isNaN(amount) || amount < 30 || amount > 5000) {
+            if (isNaN(amount) || amount < 25 || amount > 5000) {
                 amountInput.classList.add('is-invalid');
-                document.getElementById('amount-feedback').textContent = 'Amount must be between $30 and $5000';
+                document.getElementById('amount-feedback').textContent = 'Amount must be between $25 and $5000';
             } else {
                 amountInput.classList.remove('is-invalid');
                 amountInput.classList.add('is-valid');
@@ -221,12 +221,12 @@ function initializeDepositForm() {
             const amount = parseFloat(amountInput.value);
             const method = paymentMethodInput.value;
 
-            if (isNaN(amount) || amount < 30 || amount > 5000 || !method) {
+            if (isNaN(amount) || amount < 25 || amount > 5000 || !method) {
                 e.preventDefault();
 
-                if (isNaN(amount) || amount < 30 || amount > 5000) {
+                if (isNaN(amount) || amount < 25 || amount > 5000) {
                     amountInput.classList.add('is-invalid');
-                    document.getElementById('amount-feedback').textContent = 'Amount must be between $30 and $5000';
+                    document.getElementById('amount-feedback').textContent = 'Amount must be between $25 and $5000';
                     amountInput.focus();
                 }
 
@@ -251,12 +251,13 @@ function initializeWithdrawalForm() {
         // Validate amount input
         amountInput.addEventListener('input', () => {
             const amount = parseFloat(amountInput.value);
-            if (isNaN(amount) || amount <= 0) {
+            if (isNaN(amount) || amount < 30 || amount > 5000 || amount > maxAmount) {
                 amountInput.classList.add('is-invalid');
-                document.getElementById('amount-feedback').textContent = 'Amount must be greater than zero';
-            } else if (amount > maxAmount) {
-                amountInput.classList.add('is-invalid');
-                document.getElementById('amount-feedback').textContent = 'Amount exceeds available balance';
+                if (amount > maxAmount) {
+                    document.getElementById('amount-feedback').textContent = 'Insufficient balance';
+                } else {
+                    document.getElementById('amount-feedback').textContent = 'Amount must be between $30 and $5000';
+                }
             } else {
                 amountInput.classList.remove('is-invalid');
                 amountInput.classList.add('is-valid');
@@ -278,15 +279,17 @@ function initializeWithdrawalForm() {
             const amount = parseFloat(amountInput.value);
             const wallet = walletAddressInput.value.trim();
 
-            if (isNaN(amount) || amount <= 0 || amount > maxAmount || !wallet) {
+            if (isNaN(amount) || amount < 30 || amount > 5000 || amount > maxAmount || !wallet) {
                 e.preventDefault();
 
-                if (isNaN(amount) || amount <= 0) {
+                if (isNaN(amount) || amount < 30 || amount > 5000 || amount > maxAmount) {
                     amountInput.classList.add('is-invalid');
-                    document.getElementById('amount-feedback').textContent = 'Amount must be greater than zero';
-                } else if (amount > maxAmount) {
-                    amountInput.classList.add('is-invalid');
-                    document.getElementById('amount-feedback').textContent = 'Amount exceeds available balance';
+                    if (amount > maxAmount) {
+                        document.getElementById('amount-feedback').textContent = 'Insufficient balance';
+                    } else {
+                        document.getElementById('amount-feedback').textContent = 'Amount must be between $30 and $5000';
+                    }
+                    amountInput.focus();
                 }
 
                 if (!wallet) {
